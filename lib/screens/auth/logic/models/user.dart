@@ -1,26 +1,27 @@
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable implements Comparable {
-  late final String id;
+  late final int id;
   late final String username;
-  late final String? email;
-  late final bool online;
-  late final bool isSocial;
+  late final String name;
+  late final String email;
+  late final String photoUrl;
 
   User({
     required this.id,
     required this.username,
     required this.email,
-    required this.online,
-    this.isSocial = false,
+    required this.name,
+    required this.photoUrl,
   });
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['_id'];
-    username = json['username'] ?? '';
-    email = json['email'];
-    online = json['online'] ?? false;
-    isSocial = json['isSocial'] ?? false;
+    final user = json['user'];
+    id = user['id'];
+    username = user['username'] ?? '';
+    email = user['email'];
+    name = user['name'] ?? '';
+    photoUrl = user['photoUrl'] ?? '';
   }
 
   static List<User> fromList(List<dynamic> list) {
@@ -28,22 +29,10 @@ class User extends Equatable implements Comparable {
   }
 
   @override
-  int compareTo(dynamic other) {
-    if (this.online == other.online) {
-      return 0;
-    }
-
-    if (this.online) {
-      return -1;
-    }
-
-    if (other.online) {
-      return 1;
-    }
-
-    return 0;
-  }
+  List<Object?> get props => [id, username, email, name, photoUrl];
 
   @override
-  List<Object?> get props => [id, username, email, online];
+  int compareTo(other) {
+    throw UnimplementedError();
+  }
 }

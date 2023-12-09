@@ -1,164 +1,144 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/components/custom_surfix_icon.dart';
-import 'package:shop_app/components/default_button.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/components/form_error.dart';
-import 'package:shop_app/screens/complete_profile/complete_profile_screen.dart';
-
-import '../../../../../constants.dart';
+import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
+import 'package:shop_app/screens/auth/view/sign_up/register/sign_up_screen.dart';
+import 'package:shop_app/screens/auth/view/sign_up/verify_email/verify_email.dart';
+import 'package:shop_app/screens/shared/view/widgets/main_text_field.dart';
+import 'package:shop_app/screens/shared/view/widgets/icon_text_button.dart';
 import '../../../../../size_config.dart';
-
+import 'package:shop_app/screens/auth/logic/accuracy/validate_signup.dart';
 
 class SignUpForm extends StatefulWidget {
   @override
-  _SignUpFormState createState() => _SignUpFormState();
+  _SignUpForm createState() => _SignUpForm();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _SignUpForm extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  String? email;
-  String? password;
-  String? conform_password;
-  bool remember = false;
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _emailController = TextEditingController();
+  bool _loading = false;
   final List<String?> errors = [];
 
-  void addError({String? error}) {
-    if (!errors.contains(error))
-      setState(() {
-        errors.add(error);
-      });
-  }
+  @override
+  void dispose() {
+    super.dispose();
 
-  void removeError({String? error}) {
-    if (errors.contains(error))
-      setState(() {
-        errors.remove(error);
-      });
+    _passwordController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final node = FocusScope.of(context);
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          buildEmailFormField(),
+          _form(node, context),
           SizedBox(height: getProportionateScreenHeight(30)),
-          buildPasswordFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
-          buildConformPassFormField(),
           FormError(errors: errors),
-          SizedBox(height: getProportionateScreenHeight(40)),
-          DefaultButton(
-            text: "Continue",
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                // if all are valid then go to success screen
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
-              }
-            },
+          SizedBox(height: getProportionateScreenHeight(20)),
+          IconTextButton(
+            text: "Register",
+            onPressed: () => _signUp(context),
+            loading: _loading,
           ),
         ],
       ),
     );
   }
 
-  TextFormField buildConformPassFormField() {
-    return TextFormField(
-      obscureText: true,
-      onSaved: (newValue) => conform_password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.isNotEmpty && password == conform_password) {
-          removeError(error: kMatchPassError);
-        }
-        conform_password = value;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          addError(error: kPassNullError);
-          return "";
-        } else if ((password != value)) {
-          addError(error: kMatchPassError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Confirm Password",
-        hintText: "Re-enter your password",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-      ),
+  Widget _form(FocusScopeNode node, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MainTextField(
+          label: 'Name',
+          hintText: 'Enter your name',
+          controller: _nameController,
+          usernameField: true,
+          onEditingComplete: () => node.nextFocus(),
+        ),
+        SizedBox(height: getProportionateScreenHeight(30)),
+        MainTextField(
+          label: 'Email',
+          hintText: 'Enter your email',
+          emailField: true,
+          controller: _emailController,
+          onEditingComplete: () => node.nextFocus(),
+        ),
+        SizedBox(height: getProportionateScreenHeight(30)),
+        MainTextField(
+          label: 'Password',
+          hintText: 'Enter your password',
+          controller: _passwordController,
+          passwordField: true,
+          onEditingComplete: () => node.nextFocus(),
+        ),
+        SizedBox(height: getProportionateScreenHeight(30)),
+        MainTextField(
+          label: 'Password',
+          hintText: 'Confirm your password',
+          controller: _confirmPasswordController,
+          passwordField: true,
+          onSubmitted: (_) {
+            node.unfocus();
+            _signUp(context);
+          },
+        ),
+        SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 
-  TextFormField buildPasswordFormField() {
-    return TextFormField(
-      obscureText: true,
-      onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          removeError(error: kShortPassError);
-        }
-        password = value;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          addError(error: kPassNullError);
-          return "";
-        } else if (value.length < 8) {
-          addError(error: kShortPassError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Password",
-        hintText: "Enter your password",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-      ),
+  _signUp(BuildContext context) {
+    final bloc = context.read<AuthCubit>();
+    print(_emailController.text);
+    final vali = ValidateSignUp();
+    vali.isValidSignUpForm(_nameController.text, _emailController.text,
+        _passwordController.text, _confirmPasswordController.text);
+    _signUpWith(
+      context,
+      () => bloc.register(_nameController.text, _emailController.text,
+          _passwordController.text),
     );
   }
 
-  TextFormField buildEmailFormField() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          removeError(error: kInvalidEmailError);
-        }
-        return null;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          addError(error: kEmailNullError);
-          return "";
-        } else if (!emailValidatorRegExp.hasMatch(value)) {
-          addError(error: kInvalidEmailError);
-          return "";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Email",
-        hintText: "Enter your email",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
-      ),
-    );
+  _signUpWith(BuildContext context, Future<dynamic> Function() method) async {
+    if (_loading) {
+      return;
+    }
+    // setState(() {
+    //   _loading = true;
+    // });
+
+    try {
+      final token = await method();
+      print(token);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifyEmailScreen(confirmToken: token),
+          settings: RouteSettings(
+            arguments: 'confirmToken',
+          ),
+        ),
+      );
+    } finally {
+      _confirmPasswordController.text = '';
+      _passwordController.text = '';
+      _emailController.text = '';
+      _nameController.text = '';
+
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 }

@@ -1,10 +1,11 @@
-// import 'package:auth/src/app.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/token.dart';
 import 'package:shop_app/screens/auth/logic/repository/auth_repository.dart';
+import 'package:shop_app/screens/app.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/constants.dart';
 
 class AuthTokenInterceptor extends Interceptor {
   static const skipHeader = 'skipAuthToken';
@@ -15,30 +16,30 @@ class AuthTokenInterceptor extends Interceptor {
 
   @override
   onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    // final context = applicationKey.currentContext;
+    final context = applicationKey.currentContext;
 
-    // final repository = context?.read<AuthRepository>();
+    final repository = context?.read<AuthRepository>();
 
-    // if (repository == null) {
-    //   return;
-    // }
+    if (repository == null) {
+      return;
+    }
 
-    // final accessToken = await repository.getAccessToken();
+    final accessToken = await repository.getAccessToken();
 
-    // if (accessToken != null) {
-    //   options.headers['Authorization'] = 'Bearer $accessToken';
-    // }
+    if (accessToken != null) {
+      options.headers['Authorization'] = 'Bearer $accessToken';
+    }
 
     return super.onRequest(options, handler);
   }
 
   @override
   onError(DioError err, ErrorInterceptorHandler handler) async {
-    // final context = applicationKey.currentContext;
+    final context = applicationKey.currentContext;
 
-    // if (context == null) {
-    //   return;
-    // }
+    if (context == null) {
+      return;
+    }
 
     final response = err.response?.data;
 
@@ -46,12 +47,12 @@ class AuthTokenInterceptor extends Interceptor {
       return super.onError(err, handler);
     }
 
-    // final repository = context.read<AuthRepository>();
+    final repository = context.read<AuthRepository>();
 
-    // if (err.response?.statusCode == 401 &&
-    //     await repository.getRefreshToken() != null) {
-    //   return _handlerRefreshToken(context, repository, err, handler);
-    // }
+    if (err.response?.statusCode == 401 &&
+        await repository.getRefreshToken() != null) {
+      return _handlerRefreshToken(context, repository, err, handler);
+    }
 
     return super.onError(err, handler);
   }
@@ -72,7 +73,7 @@ class AuthTokenInterceptor extends Interceptor {
 
     try {
       final response = await api.post(
-        '/auth/refresh-token',
+        '${environments.api}/user/refresh-token',
         data: {
           'refreshToken': refreshToken,
         },

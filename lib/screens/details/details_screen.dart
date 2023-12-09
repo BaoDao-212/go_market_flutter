@@ -5,8 +5,8 @@ import 'components/body.dart';
 import 'components/custom_app_bar.dart';
 
 class DetailsScreen extends StatelessWidget {
-  static String routeName = "/details";
-
+  static const String routeName = "/details";
+static route() => MaterialPageRoute(builder: (_) => DetailsScreen());
   @override
   Widget build(BuildContext context) {
     final ProductDetailsArguments agrs =

@@ -5,7 +5,7 @@ class Tokens {
   Tokens({required this.accessToken});
 
   Tokens.fromJson(Map<String, dynamic> json) {
-    accessToken = json['access_token'];
-    refreshToken = json['refresh_token'];
+    accessToken = json['accessToken'];
+    refreshToken = json['refreshToken'];
   }
 }

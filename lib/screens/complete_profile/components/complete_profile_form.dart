@@ -49,14 +49,14 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
           buildAddressFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
-          DefaultButton(
-            text: "continue",
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                Navigator.pushNamed(context, OtpScreen.routeName);
-              }
-            },
-          ),
+          // DefaultButton(
+          //   text: "continue",
+          //   press: () {
+          //     if (_formKey.currentState!.validate()) {
+          //       Navigator.pushNamed(context, OtpScreen.routeName);
+          //     }
+          //   },
+          // ),
         ],
       ),
     );

@@ -3,65 +3,71 @@ import 'package:shop_app/screens/auth/logic/models/token.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/shared/logic/http/api.dart';
 import 'package:shop_app/screens/shared/logic/http/interceptors/error_dialog_interceptor.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:shop_app/screens/app.dart';
 
 class AuthAPIProvider {
-  Future<Tokens> authenticate(String email, String password) async {
-    print(11);
-    print(email);
-    final response = await api.post(
-      'http://192.168.43.230:8001/api/user/login',
-      data: {
-        'email': email,
-        'password': password,
-      },
-    );
-    print(response);
-    // print(13222);
-    // try {
-    //   // Thực hiện yêu cầu POST với dữ liệu đăng nhập
-    //   final response = await dio.post(
-    //     'http://192.168.43.230:8001/api/user/login',
-    //     data: {
-    //       'email': 'baodaoc1@gmail.com',
-    //       'password': '123123',
-    //     },
-    //   );
-    //   print(response);
-    //   // Kiểm tra mã trạng thái của response
-    //   if (response.statusCode == 200) {
-    //     // Xử lý thành công
-    //     print('Login successful! Token: ${response.data['token']}');
-    //   } else {
-    //     // Xử lý lỗi
-    //     print('Login failed. ${response.data['error']}');
-    //   }
-    // } catch (error) {
-    //   // Xử lý lỗi nếu có
-    //   print('Error during login: $error');
-    // }
-    // print(123);
-    // return Tokens(accessToken: '123');
-    final tokens = Tokens.fromJson(response?.data);
-    return tokens;
+  _notification(String notification, String type) {
+    final context = applicationKey.currentContext;
+    if (context == null) {
+      return;
+    }
+    QuickAlert.show(
+        context: context,
+        type: type == 'ERROR' ? QuickAlertType.error : QuickAlertType.success,
+        title: "Oops...",
+        text: notification);
   }
 
-  Future<Tokens> register(
-    String username,
-    String password,
+  final dio = Dio();
+  static final String path = 'http://192.168.43.230:8001/api';
+  Future<(Tokens, User)> authenticate(String email, String password) async {
+    var response;
+    final dio = Dio();
+    try {
+      response = await dio.post(
+        "${path}/user/login",
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
+      final tokens = Tokens.fromJson(response.data);
+      final user = User.fromJson(response.data);
+      return (tokens, user);
+    } on DioError catch (e) {
+      print(e.response?.data);
+      _notification(e.response?.data['resultMessage']['en'], "ERROR");
+      rethrow;
+    }
+  }
+
+  Future<String> register(
+    String name,
     String email,
+    String password,
   ) async {
-    final response = await api.post(
-      '/auth/register',
-      data: {
-        'username': username,
-        'password': password,
-        'email': email,
-      },
-    );
-
-    final tokens = Tokens.fromJson(response.data);
-
-    return tokens;
+    var response;
+    try {
+      print(name);
+      response = await dio.post(
+        "${path}/user",
+        data: {
+          'email': email,
+          'password': password,
+          'name': name,
+          'language': 'en',
+          'timezone': '7',
+          'deviceId': '1231123',
+        },
+      );
+      print(response.data['confirmToken']);
+      return response.data['confirmToken'];
+    } on DioError catch (e) {
+      print(e.response?.data);
+      _notification(e.response?.data['resultMessage']['en'], "ERROR");
+      rethrow;
+    }
   }
 
   Future<void> recover(String email) async {
@@ -73,9 +79,43 @@ class AuthAPIProvider {
     );
   }
 
+  Future<Tokens> verify(String code, String confirmToken) async {
+    try {
+      final response = await dio.post(
+        "${path}/user/verify-email",
+        data: {
+          'code': code,
+          'token': confirmToken,
+        },
+      );
+      final tokens = Tokens.fromJson(response.data);
+      return tokens;
+    } on DioError catch (e) {
+      print(e.response?.data);
+      _notification(e.response?.data['resultMessage']['en'], "ERROR");
+      rethrow;
+    }
+  }
+
+  Future<String> resend(String email) async {
+    try {
+      final response = await dio.post(
+        "${path}/user/send-verification-code",
+        data: {
+          'email': email,
+        },
+      );
+      return response.data['confirmToken'];
+    } on DioError catch (e) {
+      print(e.response?.data);
+      _notification(e.response?.data['resultMessage']['en'], "ERROR");
+      rethrow;
+    }
+  }
+
   Future<User?> getProfile() async {
     final response = await api.get(
-      '/auth/me',
+      '/user',
       options: Options(
         headers: {
           ErrorDialogInterceptor.skipHeader: true,
@@ -84,56 +124,6 @@ class AuthAPIProvider {
     );
 
     return User.fromJson(response.data);
-  }
-
-  Future<Tokens> loginWithFacebook(String? accessToken) {
-    return _socialLogin(
-      provider: 'facebook',
-      accessToken: accessToken,
-    );
-  }
-
-  Future<Tokens> loginWithGoogle(String? accessToken) {
-    return _socialLogin(
-      provider: 'google',
-      accessToken: accessToken,
-    );
-  }
-
-  Future<Tokens> loginWithApple({
-    required String? identityToken,
-    required String authorizationCode,
-    String? givenName,
-    String? familyName,
-    String? type,
-  }) {
-    return _socialLogin(
-      provider: 'apple',
-      accessToken: identityToken,
-      authorizationCode: authorizationCode,
-      type: type,
-      name: '$givenName $familyName',
-    );
-  }
-
-  Future<Tokens> _socialLogin({
-    required String provider,
-    required String? accessToken,
-    String? authorizationCode,
-    String? type,
-    String? name,
-  }) async {
-    final response = await api.post(
-      '/auth/$provider-login',
-      data: {
-        'name': name,
-        'accessToken': accessToken,
-        'authorizationCode': authorizationCode,
-        'type': type,
-      },
-    );
-
-    return Tokens.fromJson(response.data);
   }
 
   Future<Tokens> loginWithRefreshToken(String? refreshToken) async {

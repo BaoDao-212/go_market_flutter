@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shop_app/screens/auth/logic/models/token.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/auth/logic/provider/auth_api_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
+import 'package:email_validator/email_validator.dart';
 
 class AuthRepository {
   final _provider = AuthAPIProvider();
@@ -43,18 +45,24 @@ class AuthRepository {
     }
   }
 
-  Future<void> authenticate(String email, String password) async {
-    print(1);
-    print(email);
-    return setTokens(
-      await _provider.authenticate(email, password),
-    );
+  Future<(Future<dynamic>, dynamic)> authenticate(
+      String email, String password, BuildContext context) async {
+    final (tokens, user) = await _provider.authenticate(email, password);
+    return (setTokens(tokens), user);
   }
 
-  Future<void> register(String username, String password, String email) async {
-    return setTokens(
-      await _provider.register(username, password, email),
-    );
+  Future<String> register(String name, String email, String password) async {
+    return await _provider.register(name, email, password);
+  }
+
+  Future<void> verify(String code, String confirmToken) async {
+    final tokens = await _provider.verify(code, confirmToken);
+    return setTokens(tokens);
+  }
+
+  Future<String> resend(String email) async {
+    final tokens = await _provider.resend(email);
+    return tokens;
   }
 
   Future<void> loginWithRefreshToken() async {
@@ -96,7 +104,37 @@ class AuthRepository {
   }
 
   Future<void> setTokens(Tokens tokens) async {
+    print(tokens.accessToken);
     await setAccessToken(tokens.accessToken);
     await setRefreshToken(tokens.refreshToken);
+  }
+
+  Future<void> isValidLoginForm(
+      String email, String password, BuildContext context) async {
+    if (email.isEmpty || password.isEmpty) {
+      return QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: 'Please enter both email and password.',
+      );
+    }
+    if (!EmailValidator.validate(email)) {
+      return QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: 'Email is not valid.',
+      );
+    }
+    if (password.length < 6) {
+      return QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: 'Password is not valid. It should be at least 6 characters.',
+      );
+    }
+    return;
   }
 }

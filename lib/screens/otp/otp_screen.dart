@@ -4,7 +4,8 @@ import 'package:shop_app/size_config.dart';
 import 'components/body.dart';
 
 class OtpScreen extends StatelessWidget {
-  static String routeName = "/otp";
+  static const String routeName = "/otp";
+  static route() => MaterialPageRoute(builder: (_) => OtpScreen());
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

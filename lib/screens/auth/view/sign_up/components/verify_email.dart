@@ -6,16 +6,20 @@ import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/shared/view/widgets/main_text_field.dart';
 import 'package:shop_app/screens/shared/view/widgets/icon_text_button.dart';
 import '../../../../../size_config.dart';
+import 'package:shop_app/screens/auth/logic/accuracy/validate_signup.dart';
 
-class SignForm extends StatefulWidget {
+class VerifyEmailForm extends StatefulWidget {
+  final String confirmToken;
+
+  VerifyEmailForm({required this.confirmToken});
+
   @override
-  _SignFormState createState() => _SignFormState();
+  _VerifyEmailForm createState() => _VerifyEmailForm();
 }
 
-class _SignFormState extends State<SignForm> {
+class _VerifyEmailForm extends State<VerifyEmailForm> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  final _passwordController = TextEditingController();
+  final _codeController = TextEditingController();
   bool _loading = false;
   final List<String?> errors = [];
 
@@ -23,7 +27,7 @@ class _SignFormState extends State<SignForm> {
   void dispose() {
     super.dispose();
 
-    _passwordController.dispose();
+    _codeController.dispose();
   }
 
   @override
@@ -39,8 +43,8 @@ class _SignFormState extends State<SignForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           IconTextButton(
-            text: "Login",
-            onPressed: () => _login(context),
+            text: "Verify Accout",
+            onPressed: () => _verify(context),
             loading: _loading,
           ),
         ],
@@ -53,25 +57,13 @@ class _SignFormState extends State<SignForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         MainTextField(
-          label: 'Email',
-          hintText: 'Enter your email',
-          emailField: true,
-          onChanged: (value) => setState(() {
-            _email = value;
-          }),
+          label: 'Verification code',
+          hintText: 'Enter your verification code',
+          controller: _codeController,
+          usernameField: true,
           onEditingComplete: () => node.nextFocus(),
         ),
         SizedBox(height: getProportionateScreenHeight(30)),
-        MainTextField(
-          label: 'Password',
-          hintText: 'Enter your password',
-          controller: _passwordController,
-          passwordField: true,
-          onSubmitted: (_) {
-            node.unfocus();
-            _login(context);
-          },
-        ),
         SizedBox(
           height: 20,
         ),
@@ -79,15 +71,15 @@ class _SignFormState extends State<SignForm> {
     );
   }
 
-  _login(BuildContext context) {
+  _verify(BuildContext context) {
     final bloc = context.read<AuthCubit>();
-    _loginWith(
+    _verifyWith(
       context,
-      () => bloc.authenticate(_email, _passwordController.text, context),
+      () => bloc.verify(_codeController.text, widget.confirmToken),
     );
   }
 
-  _loginWith(BuildContext context, Future<void> Function() method) async {
+  _verifyWith(BuildContext context, Future<void> Function() method) async {
     if (_loading) {
       return;
     }
@@ -100,7 +92,7 @@ class _SignFormState extends State<SignForm> {
           _loading = false;
         });
       }
-      _passwordController.text = '';
+      _codeController.text = '';
     });
     try {
       await method();
@@ -112,7 +104,6 @@ class _SignFormState extends State<SignForm> {
       setState(() {
         _loading = false;
       });
-      _passwordController.text = '';
     }
   }
 }

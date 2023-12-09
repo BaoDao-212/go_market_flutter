@@ -5,7 +5,8 @@ import 'components/body.dart';
 import 'components/check_out_card.dart';
 
 class CartScreen extends StatelessWidget {
-  static String routeName = "/cart";
+  static const String routeName = "/cart";
+  static route() => MaterialPageRoute(builder: (_) => CartScreen());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

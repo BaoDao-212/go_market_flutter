@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/auth/view/sign_up/register/sign_up_screen.dart';
+import 'package:shop_app/screens/auth/view/sign_up/resend_code.dart/resend_code.dart';
 
 import '../constants.dart';
 import '../size_config.dart';
 
-class NoAccountText extends StatelessWidget {
-  const NoAccountText({
+class ResendCode extends StatelessWidget {
+  const ResendCode({
     Key? key,
   }) : super(key: key);
 
@@ -15,13 +15,13 @@ class NoAccountText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don’t have an account? ",
+          "",
           style: TextStyle(fontSize: getProportionateScreenWidth(16)),
         ),
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, SignUpScreen.routeName),
+          onTap: () => Navigator.pushNamed(context, ResendCodeScreen.routeName),
           child: Text(
-            "Sign Up",
+            "Resend code",
             style: TextStyle(
                 fontSize: getProportionateScreenWidth(16),
                 color: kPrimaryColor),

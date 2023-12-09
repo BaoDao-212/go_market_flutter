@@ -35,17 +35,41 @@ class MainTextField extends StatefulWidget {
 class _MainTextFieldState extends State<MainTextField> {
   bool _obscureText = true;
 
+  IconData getPrefixIcon() {
+    if (widget.passwordField) {
+      return Icons.lock;
+    } else if (widget.emailField) {
+      return Icons.email;
+    } else if (widget.usernameField) {
+      return Icons.person;
+    } else {
+      // Default case
+      return Icons.error;
+    }
+  }
+
+  IconData getSuffixIcon() {
+    if (widget.passwordField) {
+      return _obscureText ? Icons.visibility : Icons.visibility_off;
+    } else {
+      // No suffix icon for non-password fields
+      return Icons.error;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: widget.hintText,
+        prefixIcon:
+            Icon(getPrefixIcon(), color: const Color.fromARGB(255, 80, 78, 78)),
         suffixIcon: widget.passwordField
             ? IconButton(
                 icon: Icon(
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.grey,
+                  getSuffixIcon(),
+                  color: Color.fromARGB(255, 95, 95, 95),
                 ),
                 onPressed: () {
                   setState(() {
@@ -60,7 +84,7 @@ class _MainTextFieldState extends State<MainTextField> {
           borderSide: BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.circular(30),
         ),
-        contentPadding: EdgeInsets.all(21),
+        contentPadding: EdgeInsets.all(16),
         hintStyle: TextStyle(color: widget.textColor),
       ),
       keyboardType: widget.emailField

@@ -41,8 +41,10 @@ dev_dependencies:
   equatable: ^2.0.3
   dio: ^4.0.0
   bloc: ^8.0.1
-  flutter_secure_storage: ^4.2.1
+  flutter_secure_storage: ^9.0.0
   flutter_bloc: ^8.0.0
+  quickalert:
+  email_validator: '^2.1.16'
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is

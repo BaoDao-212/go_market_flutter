@@ -5,7 +5,8 @@ import 'package:shop_app/enums.dart';
 import 'components/body.dart';
 
 class ProfileScreen extends StatelessWidget {
-  static String routeName = "/profile";
+  static const String routeName = "/profile";
+  static route() => MaterialPageRoute(builder: (_) => ProfileScreen());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

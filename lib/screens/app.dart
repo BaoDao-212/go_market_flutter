@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/routes.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
+import 'package:shop_app/theme.dart';
+import 'package:shop_app/screens/home/home_screen.dart';
 
 final GlobalKey<NavigatorState> applicationKey = GlobalKey();
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
@@ -31,20 +33,9 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: applicationKey,
         scaffoldMessengerKey: scaffoldMessengerKey,
         debugShowCheckedModeBanner: false,
-        onGenerateRoute: appRouter.onGenerateRoute,
         initialRoute: SplashScreen.routeName,
-        theme: ThemeData.light().copyWith(
-          colorScheme: ColorScheme.light().copyWith(
-            primary: Color(0xff4C525C),
-            secondary: Color(0xff4C525C),
-            background: Color(0xff4C525C),
-          ),
-          appBarTheme: AppBarTheme(elevation: 0),
-          primaryColor: Color(0xff4C525C),
-          secondaryHeaderColor: Color(0xffFFAE48),
-          highlightColor: Color(0xff58BFE6),
-          indicatorColor: Color(0xff4C525C),
-        ),
+        onGenerateRoute: appRouter.onGenerateRoute,
+        theme: AppTheme.lightTheme(context),
       ),
     );
   }
@@ -67,6 +58,14 @@ class _InitProviders extends StatelessWidget {
           listenWhen: (prev, curr) => prev != null && curr == null,
           listener: (context, user) {
             final route = ModalRoute.of(context)?.settings.name;
+
+            if (user == null && route != HomeScreen.routeName) {
+              Navigator.pushNamedAndRemoveUntil(
+                applicationKey.currentContext as BuildContext,
+                HomeScreen.routeName,
+                (route) => false,
+              );
+            }
           },
           child: child,
         ),
