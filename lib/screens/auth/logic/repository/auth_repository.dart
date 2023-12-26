@@ -38,7 +38,7 @@ class AuthRepository {
 
     try {
       final profile = await _provider.getProfile();
-
+      print(profile);
       return profile;
     } catch (e) {
       return null;
@@ -104,7 +104,6 @@ class AuthRepository {
   }
 
   Future<void> setTokens(Tokens tokens) async {
-    print(tokens.accessToken);
     await setAccessToken(tokens.accessToken);
     await setRefreshToken(tokens.refreshToken);
   }

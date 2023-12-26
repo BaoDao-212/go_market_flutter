@@ -4,19 +4,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../size_config.dart';
 
 class FormError extends StatelessWidget {
+  final String? error;
+
   const FormError({
     Key? key,
-    required this.errors,
+    this.error,
   }) : super(key: key);
-
-  final List<String?> errors;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(
-          errors.length, (index) => formErrorText(error: errors[index]!)),
-    );
+    return error != null && error!.isNotEmpty
+        ? formErrorText(error: error!)
+        : SizedBox.shrink(); // Return an empty SizedBox if there is no error
   }
 
   Row formErrorText({required String error}) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
+import 'package:shop_app/screens/profile/view/my_account/my_account.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 
 import 'profile_menu.dart';
@@ -18,7 +19,13 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "My Account",
             icon: "assets/icons/User Icon.svg",
-            press: () => {},
+            press: () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                MyProfileScreen.routeName,
+                (route) => false,
+              );
+            },
           ),
           ProfileMenu(
             text: "Notifications",

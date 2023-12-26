@@ -31,7 +31,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.screenHeight * 0.08),
                   SignUpForm(),
-                  SizedBox(height: SizeConfig.screenHeight * 0.08),
+                  SizedBox(height: SizeConfig.screenHeight * 0.008),
                   ResendCode(),
                   SizedBox(height: getProportionateScreenHeight(20)),
                   Text(

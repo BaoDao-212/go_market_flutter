@@ -45,6 +45,7 @@ dev_dependencies:
   flutter_bloc: ^8.0.0
   quickalert:
   email_validator: '^2.1.16'
+  image_picker: ^1.0.4
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is

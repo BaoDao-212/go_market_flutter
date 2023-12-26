@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/components/form_error.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/view/sign_up/verify_email/verify_email.dart';
 import 'package:shop_app/screens/shared/view/widgets/main_text_field.dart';
@@ -8,7 +7,6 @@ import 'package:shop_app/screens/shared/view/widgets/icon_text_button.dart';
 import '../../../../../size_config.dart';
 
 class ResendEmailForm extends StatefulWidget {
-
   @override
   _ResendEmailForm createState() => _ResendEmailForm();
 }
@@ -17,7 +15,6 @@ class _ResendEmailForm extends State<ResendEmailForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   bool _loading = false;
-  final List<String?> errors = [];
 
   @override
   void dispose() {
@@ -34,9 +31,6 @@ class _ResendEmailForm extends State<ResendEmailForm> {
       child: Column(
         children: [
           _form(node, context),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           IconTextButton(
             text: "Resend",

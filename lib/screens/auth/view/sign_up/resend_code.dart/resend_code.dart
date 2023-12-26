@@ -24,7 +24,7 @@ class ResendCodeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16),
-                  Text("Send code", style: headingStyle),
+                  Text("Resend code", style: headingStyle),
                   Text(
                     "Please enter the email you registered with",
                     textAlign: TextAlign.center,
@@ -32,7 +32,6 @@ class ResendCodeScreen extends StatelessWidget {
                   SizedBox(height: SizeConfig.screenHeight * 0.08),
                   ResendEmailForm(),
                   SizedBox(height: SizeConfig.screenHeight * 0.08),
-                  ResendCode(),
                   SizedBox(height: getProportionateScreenHeight(20)),
                 ],
               ),

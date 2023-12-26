@@ -36,7 +36,7 @@ class VerifyEmailScreen extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.screenHeight * 0.08),
                   VerifyEmailForm(confirmToken: confirmToken),
-                  SizedBox(height: SizeConfig.screenHeight * 0.08),
+                  SizedBox(height: SizeConfig.screenHeight * 0.01),
                   ResendCode(),
                   SizedBox(height: getProportionateScreenHeight(20)),
                 ],

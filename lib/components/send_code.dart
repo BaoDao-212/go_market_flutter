@@ -15,13 +15,13 @@ class ResendCode extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "",
+          "Registered and want to ",
           style: TextStyle(fontSize: getProportionateScreenWidth(16)),
         ),
         GestureDetector(
           onTap: () => Navigator.pushNamed(context, ResendCodeScreen.routeName),
           child: Text(
-            "Resend code",
+            "resend code?",
             style: TextStyle(
                 fontSize: getProportionateScreenWidth(16),
                 color: kPrimaryColor),

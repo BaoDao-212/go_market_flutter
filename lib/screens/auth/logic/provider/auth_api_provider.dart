@@ -116,14 +116,9 @@ class AuthAPIProvider {
   Future<User?> getProfile() async {
     final response = await api.get(
       '/user',
-      options: Options(
-        headers: {
-          ErrorDialogInterceptor.skipHeader: true,
-        },
-      ),
     );
-
-    return User.fromJson(response.data);
+    print(response.data['user']);
+    return User.fromJson(response.data['user']);
   }
 
   Future<Tokens> loginWithRefreshToken(String? refreshToken) async {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/components/form_error.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/shared/view/widgets/main_text_field.dart';
@@ -14,16 +13,15 @@ class SignForm extends StatefulWidget {
 
 class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
   final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
   bool _loading = false;
-  final List<String?> errors = [];
 
   @override
   void dispose() {
     super.dispose();
-
     _passwordController.dispose();
+    _emailController.dispose();
   }
 
   @override
@@ -35,8 +33,6 @@ class _SignFormState extends State<SignForm> {
         children: [
           _form(node, context),
           SizedBox(height: getProportionateScreenHeight(30)),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           IconTextButton(
             text: "Login",
@@ -56,9 +52,7 @@ class _SignFormState extends State<SignForm> {
           label: 'Email',
           hintText: 'Enter your email',
           emailField: true,
-          onChanged: (value) => setState(() {
-            _email = value;
-          }),
+          controller: _emailController,
           onEditingComplete: () => node.nextFocus(),
         ),
         SizedBox(height: getProportionateScreenHeight(30)),
@@ -67,10 +61,6 @@ class _SignFormState extends State<SignForm> {
           hintText: 'Enter your password',
           controller: _passwordController,
           passwordField: true,
-          onSubmitted: (_) {
-            node.unfocus();
-            _login(context);
-          },
         ),
         SizedBox(
           height: 20,
@@ -83,7 +73,8 @@ class _SignFormState extends State<SignForm> {
     final bloc = context.read<AuthCubit>();
     _loginWith(
       context,
-      () => bloc.authenticate(_email, _passwordController.text, context),
+      () => bloc.authenticate(
+          _emailController.text, _passwordController.text, context),
     );
   }
 
