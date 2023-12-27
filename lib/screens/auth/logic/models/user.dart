@@ -5,6 +5,7 @@ class User extends Equatable implements Comparable {
   late final String username;
   late final String name;
   late final String email;
+  late final int groupId;
   late final String photoUrl;
 
   User({
@@ -12,6 +13,7 @@ class User extends Equatable implements Comparable {
     required this.username,
     required this.email,
     required this.name,
+    required this.groupId,
     required this.photoUrl,
   });
 
@@ -21,6 +23,7 @@ class User extends Equatable implements Comparable {
     username = user['username'] ?? '';
     email = user['email'];
     name = user['name'] ?? '';
+    groupId = user['belongsToGroupAdminId'] ?? 0;
     photoUrl = user['photoUrl'] ?? '';
   }
 
@@ -29,7 +32,7 @@ class User extends Equatable implements Comparable {
   }
 
   @override
-  List<Object?> get props => [id, username, email, name, photoUrl];
+  List<Object?> get props => [id, username, email, name, photoUrl, groupId];
 
   @override
   int compareTo(other) {

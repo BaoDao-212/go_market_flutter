@@ -2,7 +2,6 @@ import 'package:shop_app/screens/auth/logic/interceptors/auth_token_interceptor.
 import 'package:shop_app/screens/auth/logic/models/token.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/shared/logic/http/api.dart';
-import 'package:shop_app/screens/shared/logic/http/interceptors/error_dialog_interceptor.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:shop_app/screens/app.dart';
 

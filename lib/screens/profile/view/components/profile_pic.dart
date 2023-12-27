@@ -16,6 +16,7 @@ class _ProfilePicState extends State<ProfilePic> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(200 as Duration);
     _loadUserProfile();
   }
 

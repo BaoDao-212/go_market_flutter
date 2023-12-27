@@ -1,11 +1,25 @@
 import 'package:equatable/equatable.dart';
+import 'package:shop_app/screens/auth/logic/models/user.dart';
 
-// ignore: must_be_immutable
 class GroupModel extends Equatable {
-  GroupModel copyWith() {
-    return GroupModel();
+  final int id;
+  final List<User> members;
+
+  GroupModel({
+    required this.id,
+    required this.members,
+  });
+
+  GroupModel copyWith({
+    int? id,
+    List<User>? members,
+  }) {
+    return GroupModel(
+      id: id ?? this.id,
+      members: members ?? this.members,
+    );
   }
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [id, members];
 }
