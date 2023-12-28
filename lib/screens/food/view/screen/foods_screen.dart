@@ -3,24 +3,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
-import 'package:shop_app/screens/group/logic/bloc/bloc.dart';
-import 'package:shop_app/screens/group/view/components/dialog/add_member.dart';
-import 'package:shop_app/screens/group/view/components/dialog/delete_member.dart';
-import 'package:shop_app/screens/group/view/components/member.dart';
+import 'package:shop_app/screens/food/logic/bloc/bloc.dart';
+import 'package:shop_app/screens/food/view/components/dialog/add_member.dart';
+import 'package:shop_app/screens/food/view/components/dialog/delete_member.dart';
+import 'package:shop_app/screens/food/view/components/member.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 
-class GroupScreen extends StatelessWidget {
-  static const String routeName = "/group";
+class FoodScreen extends StatelessWidget {
+  static const String routeName = "/food";
 
   static MaterialPageRoute route() {
     return MaterialPageRoute(builder: (context) {
       return MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => GroupBloc()..add(GroupLoadedEvent()),
+            create: (_) => FoodBloc()..add(FoodLoadedEvent()),
           ),
         ],
-        child: GroupScreen(),
+        child: FoodScreen(),
       );
     });
   }
@@ -29,8 +29,8 @@ class GroupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocListener<GroupBloc, GroupState>(
-      listenWhen: (_, curr) => curr is GroupLoadSuccessState,
+    return BlocListener<FoodBloc, FoodState>(
+      listenWhen: (_, curr) => curr is FoodLoadSuccessState,
       listener: (context, state) {},
       child: BlocBuilder<AuthCubit, User?>(
         builder: (context, user) {
@@ -44,11 +44,11 @@ class GroupScreen extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('My Group'),
+              title: Text('My Food'),
             ),
-            body: BlocBuilder<GroupBloc, GroupState>(
+            body: BlocBuilder<FoodBloc, FoodState>(
               builder: (context, state) {
-                if (state is GroupLoadInProgressState) {
+                if (state is FoodLoadInProgressState) {
                   return Center(
                     child: CircularProgressIndicator(
                       color: theme.primaryColor,
@@ -66,7 +66,7 @@ class GroupScreen extends StatelessWidget {
                           width: 100.0,
                           child: ElevatedButton(
                             onPressed: () {
-                              showAddMemberDialog(context);
+                              showAddFoodDialog(context);
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 4,
@@ -92,27 +92,23 @@ class GroupScreen extends StatelessWidget {
                         padding: EdgeInsets.all(16.0),
                         child: RefreshIndicator(
                           onRefresh: () async =>
-                              context.read<GroupBloc>().add(GroupLoadedEvent()),
-                          child: BlocBuilder<GroupBloc, GroupState>(
+                              context.read<FoodBloc>().add(FoodLoadedEvent()),
+                          child: BlocBuilder<FoodBloc, FoodState>(
                             builder: (context, state) {
-                              if (state is GroupLoadSuccessState) {
+                              if (state is FoodLoadSuccessState) {
                                 return ListView(
-                                  children: (state.group.members
-                                      .map<Widget>((member) {
-                                    return MemberCard(
-                                      name: member?.name,
-                                      photoUrl: member?.photoUrl,
-                                      id: member?.id,
-                                      showDeleteButton:
-                                          !(member.id == state.group.id),
+                                  children: state.food.foods.map<Widget>((f) {
+                                    return FoodCard(
+                                      name: f?.name ?? '',
+                                      imageUrl: f?.imageUrl ?? '',
+                                      category: f?.categoryName ?? '',
+                                      unitName: f?.unitName ?? '',
                                       onDelete: () {
-                                        print(member.name);
-                                        print(member?.username);
-                                        _showDeleteMemberDialog(context,
-                                            member?.username, member?.name);
+                                        _showDeleteFoodDialog(
+                                            context, f?.id, f?.name ?? '');
                                       },
                                     );
-                                  })).toList(),
+                                  }).toList(),
                                 );
                               } else {
                                 // Handle other states if needed
@@ -135,20 +131,20 @@ class GroupScreen extends StatelessWidget {
     );
   }
 
-  showAddMemberDialog(BuildContext context) {
+  showAddFoodDialog(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (_) => AddMemberDialog(bloc: context.read<GroupBloc>()),
+      builder: (_) => AddFoodDialog(bloc: context.read<FoodBloc>()),
     );
   }
 
-  _showDeleteMemberDialog(BuildContext context, String username, String name) {
+  _showDeleteFoodDialog(BuildContext context, int id, String name) {
     return showDialog(
       context: context,
-      builder: (_) => DeleteMemberDialog(
-        bloc: context.read<GroupBloc>(),
+      builder: (_) => DeleteFoodDialog(
+        bloc: context.read<FoodBloc>(),
         name: name,
-        username: username,
+        foodId: id,
       ),
     );
   }

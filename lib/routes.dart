@@ -4,6 +4,7 @@ import 'package:shop_app/screens/auth/view/sign_up/resend_code.dart/resend_code.
 import 'package:shop_app/screens/cart/cart_screen.dart';
 import 'package:shop_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:shop_app/screens/details/details_screen.dart';
+import 'package:shop_app/screens/food/view/screen/foods_screen.dart';
 import 'package:shop_app/screens/group/view/screen/create_group_screen.dart';
 import 'package:shop_app/screens/group/view/screen/group.screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
@@ -31,6 +32,8 @@ class AppRouter {
         return CreateGroupPage.route();
       case GroupScreen.routeName:
         return GroupScreen.route();
+      case FoodScreen.routeName:
+        return FoodScreen.route();
       case SignInScreen.routeName:
         return SignInScreen.route();
       case DetailsScreen.routeName:
