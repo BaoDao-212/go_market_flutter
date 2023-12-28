@@ -21,25 +21,25 @@ class GroupCreateEvent extends GroupEvent {
 }
 
 class GroupMemberAddEvent extends GroupEvent {
-  final dynamic member;
+  final dynamic username;
 
   GroupMemberAddEvent({
-    required this.member,
+    required this.username,
   });
 
   @override
-  List<Object> get props => [member];
+  List<Object> get props => [username];
 }
 
 class GroupMemberRemoveEvent extends GroupEvent {
-  final dynamic member;
+  final dynamic username;
 
   GroupMemberRemoveEvent({
-    required this.member,
+    required this.username,
   });
 
   @override
-  List<Object> get props => [member];
+  List<Object> get props => [username];
 }
 
 class GroupMembersLoadEvent extends GroupEvent {}
@@ -55,6 +55,4 @@ class GroupUpdateEvent extends GroupEvent {
   List<Object> get props => [updatedGroupName];
 }
 
-class GroupDeleteEvent extends GroupEvent {}
 
-// Add more events as needed based on your application requirements.

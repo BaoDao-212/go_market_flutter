@@ -12,14 +12,14 @@ class GroupLoadInProgressState extends GroupState {}
 class GroupLoadFailureState extends GroupState {}
 
 class GroupLoadSuccessState extends GroupState {
-  final dynamic user;
+  final dynamic group;
 
   GroupLoadSuccessState({
-    this.user = const {},
+    this.group = const {},
   });
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [group];
 }
 
 class GroupCreateInProgressState extends GroupState {}

@@ -4,6 +4,7 @@ import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/group/logic/bloc/bloc.dart';
 import 'package:shop_app/screens/group/view/screen/group.screen.dart';
+import 'package:shop_app/screens/splash/splash_screen.dart';
 
 class CreateGroupPage extends StatelessWidget {
   static const String routeName = "/group/create";
@@ -26,7 +27,7 @@ class CreateGroupPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocListener<GroupBloc, GroupState>(
-      listenWhen: (_, curr) => curr is GroupLoadSuccessState,
+      listenWhen: (_, curr) => curr is GroupCreateSuccessState,
       listener: (context, state) {
         Navigator.pushNamed(context, GroupScreen.routeName);
       },
@@ -42,6 +43,7 @@ class CreateGroupPage extends StatelessWidget {
               Navigator.pushNamed(context, GroupScreen.routeName);
             }
           }
+
           return Scaffold(
             appBar: AppBar(
               title: Text('Create Group'),
@@ -60,7 +62,7 @@ class CreateGroupPage extends StatelessWidget {
     );
   }
 
-  _createGroup(BuildContext context) {
+  void _createGroup(BuildContext context) {
     BlocProvider.of<GroupBloc>(context).add(GroupCreateEvent(groupName: ''));
   }
 }

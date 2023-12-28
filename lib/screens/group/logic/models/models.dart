@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:shop_app/screens/auth/logic/models/user.dart';
+import 'package:shop_app/screens/group/logic/models/member.dart';
 
 class GroupModel extends Equatable {
   final int id;
-  final List<User> members;
+  final List<Member> members;
 
   GroupModel({
     required this.id,
@@ -12,7 +12,7 @@ class GroupModel extends Equatable {
 
   GroupModel copyWith({
     int? id,
-    List<User>? members,
+    List<Member>? members,
   }) {
     return GroupModel(
       id: id ?? this.id,

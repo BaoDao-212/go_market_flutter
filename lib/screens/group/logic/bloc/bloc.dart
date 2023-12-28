@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/screens/group/logic/models/models.dart';
 import 'package:shop_app/screens/group/logic/repository/reposotory.dart';
 import '/core/app_export.dart';
 part 'event.dart';
@@ -15,18 +15,16 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   GroupBloc() : super(GroupLoadInProgressState()) {
     on<GroupLoadedEvent>(_onGroupLoad);
     on<GroupCreateEvent>(_onGroupCreate);
-    // on<GroupMemberAddEvent>(_onGroupMemberAdd);
-    // on<GroupMemberRemoveEvent>(_onGroupMemberRemove);
-    // on<GroupMembersLoadEvent>(_onGroupMembersLoad);
+    on<GroupMemberAddEvent>(_onGroupMemberAdd);
+    on<GroupMemberRemoveEvent>(_onGroupMemberRemove);
   }
 
   FutureOr<void> _onGroupLoad(
       GroupLoadedEvent event, Emitter<GroupState> emit) async {
     emit.call(GroupLoadInProgressState());
     try {
-      print(1);
-      final user = await repository.getMemberList();
-      emit.call(GroupLoadSuccessState(user: user));
+      final GroupModel group = await repository.getMemberList();
+      emit.call(GroupLoadSuccessState(group: group));
     } catch (e) {
       emit.call(GroupLoadFailureState());
     }
@@ -43,36 +41,25 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     }
   }
 
-  // FutureOr<void> _onGroupMemberAdd(
-  //     GroupMemberAddEvent event, Emitter<GroupState> emit) async {
-  //   emit.call(GroupMemberAddInProgressState());
-  //   try {
-  //     await repository.addMember();
-  //     emit.call(GroupMemberAddSuccessState());
-  //   } catch (e) {
-  //     emit.call(GroupLoadFailureState());
-  //   }
-  // }
+  FutureOr<void> _onGroupMemberAdd(
+      GroupMemberAddEvent event, Emitter<GroupState> emit) async {
+    emit.call(GroupLoadInProgressState());
+    try {
+      final group = await repository.addMember(event.username);
+      emit.call(GroupLoadSuccessState(group: group));
+    } catch (e) {
+      emit.call(GroupLoadFailureState());
+    }
+  }
 
-  // FutureOr<void> _onGroupMemberRemove(
-  //     GroupMemberRemoveEvent event, Emitter<GroupState> emit) async {
-  //   emit.call(GroupMemberRemoveInProgressState());
-  //   try {
-  //     await repository.deleteMember();
-  //     emit.call(GroupMemberRemoveSuccessState());
-  //   } catch (e) {
-  //     emit.call(GroupLoadFailureState());
-  //   }
-  // }
-
-  // FutureOr<void> _onGroupMembersLoad(
-  //     GroupMembersLoadEvent event, Emitter<GroupState> emit) async {
-  //   emit.call(GroupLoadInProgressState());
-  //   try {
-  //     final members = await repository.getMemberList();
-  //     emit.call(GroupMembersLoadSuccessState(members: members));
-  //   } catch (e) {
-  //     emit.call(GroupLoadFailureState());
-  //   }
-  // }
+  FutureOr<void> _onGroupMemberRemove(
+      GroupMemberRemoveEvent event, Emitter<GroupState> emit) async {
+    emit.call(GroupLoadInProgressState());
+    try {
+      final group = await repository.deleteMember(event.username);
+      emit.call(GroupLoadSuccessState(group: group));
+    } catch (e) {
+      emit.call(GroupLoadFailureState());
+    }
+  }
 }

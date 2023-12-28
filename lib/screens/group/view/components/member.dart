@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 class MemberCard extends StatelessWidget {
   final String name;
   final String photoUrl;
-  final String id;
+  final int id;
   final VoidCallback onDelete;
+  final bool
+      showDeleteButton; // Add a boolean to control whether to show the delete button
 
   MemberCard({
     required this.name,
     required this.photoUrl,
     required this.id,
     required this.onDelete,
+    this.showDeleteButton = true, // Default to true
   });
 
   @override
@@ -46,10 +49,13 @@ class MemberCard extends StatelessWidget {
                 ],
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: onDelete,
-            ),
+            if (showDeleteButton) // Conditionally show the delete button
+              IconButton(
+                icon: Icon(Icons.delete,
+                    color: Color.fromARGB(
+                        255, 255, 17, 0)), // Set the color to red
+                onPressed: onDelete,
+              ),
           ],
         ),
       ),

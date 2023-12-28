@@ -11,12 +11,12 @@ class ProfilePic extends StatefulWidget {
 }
 
 class _ProfilePicState extends State<ProfilePic> {
-  late String avatar;
+  String avatar = '';
   final _repository = ProfileRepository();
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(200 as Duration);
     _loadUserProfile();
   }
 
@@ -44,7 +44,10 @@ class _ProfilePicState extends State<ProfilePic> {
         clipBehavior: Clip.none,
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(avatar),
+            backgroundImage: avatar.isNotEmpty
+                ? NetworkImage(avatar)
+                : NetworkImage(
+                    'https://example.com/placeholder.png'), // Replace with a placeholder image URL
           ),
         ],
       ),
