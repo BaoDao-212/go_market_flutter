@@ -11,7 +11,7 @@ class FoodLoadInProgressState extends FoodState {}
 
 class FoodLoadFailureState extends FoodState {}
 
-class FoodLoadSuccessState extends FoodState {
+class FoodLoadSuccessState extends DataLoadSuccessState {
   final dynamic food;
 
   FoodLoadSuccessState({
@@ -20,6 +20,19 @@ class FoodLoadSuccessState extends FoodState {
 
   @override
   List<Object> get props => [food];
+}
+
+class DataLoadSuccessState extends FoodState {
+  final dynamic unit;
+  final dynamic category;
+
+  DataLoadSuccessState({
+    this.unit = const {},
+    this.category = const {},
+  });
+
+  @override
+  List<Object> get props => [unit, category];
 }
 
 class FoodCreateInProgressState extends FoodState {}

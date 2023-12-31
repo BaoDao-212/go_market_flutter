@@ -1,11 +1,20 @@
+import 'package:connectivity/connectivity.dart';
+import 'package:shop_app/screens/food/logic/local_db/food.dart';
 import 'package:shop_app/screens/food/logic/models/member.dart';
 import 'package:shop_app/screens/food/logic/models/models.dart';
 import 'package:shop_app/screens/shared/logic/http/api.dart';
 import 'package:shop_app/screens/shared/view/widgets/dialog/notification_dialog.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/http_parser.dart';
 
 class FoodAPIProvider {
+  Future<bool> isConnectedToNetwork() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult != ConnectivityResult.none;
+  }
+
   Future<FoodModel> getFoodlist() async {
-    try {
+    if (await isConnectedToNetwork()) {
       final response = await api.get("/food");
       List<Food> foods = [];
       (response.data['foods'] as List<dynamic>).forEach((m) {
@@ -13,62 +22,95 @@ class FoodAPIProvider {
         foods.add(food);
       });
       final f = FoodModel(foods: foods);
+      await DatabaseFood.getFoods().then((localFoods) async {
+        DatabaseFood.deleteAllFoods();
+        if (localFoods.isEmpty) {
+          for (final food in foods) {
+            await DatabaseFood.insertFood(food);
+          }
+        }
+      });
       return f;
-    } on DioError catch (e) {
-      print(e.response?.data);
-      NotificationHelper.show(e.response?.data['resultMessage']['en'], "ERROR");
-      rethrow;
+    } else {
+      final localFoods = await DatabaseFood.getFoods();
+      final f = FoodModel(foods: localFoods);
+      return f;
     }
   }
 
-  Future<dynamic> createFood() async {
-    try {
-      final response = await api.post("/food");
-      NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
-      return;
-    } on DioError catch (e) {
-      print(e.response?.data);
-      NotificationHelper.show(e.response?.data['resultMessage']['en'], "ERROR");
-      rethrow;
-    }
+  Future<dynamic> getUnitName() async {
+    final response = await api.get("/food/unit");
+    return response.data['units'];
   }
 
-  Future<void> addMember(String username) async {
-    print(username);
-    try {
-      print(api.options.baseUrl);
-      final response = await api.post(
-        "/user/Food/add",
-        data: {
-          'username': username,
-        },
-      );
-      print(1);
-      NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
-      print(response.data);
-
-      return;
-    } on DioError catch (e) {
-      print(e.response?.data);
-      NotificationHelper.show(e.response?.data['resultMessage']['en'], "ERROR");
-      rethrow;
-    }
+  Future<dynamic> getCategoryFood() async {
+    final response = await api.get("/food/category");
+    return response.data['categories'];
   }
 
-  Future<void> deleteMember(String username) async {
-    try {
-      final response = await api.delete(
-        "/user/Food",
-        data: {
-          'username': username,
-        },
-      );
-      NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
-      return;
-    } on DioError catch (e) {
-      print(e.response?.data);
-      NotificationHelper.show(e.response?.data['resultMessage']['en'], "ERROR");
-      rethrow;
+  Future<dynamic> createFood(String name, String foodCategoryName,
+      String unitName, XFile image) async {
+    String fileName = image!.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "name": name,
+      "foodCategoryName": foodCategoryName,
+      "unitName": unitName,
+      "image": await MultipartFile.fromFile(
+        image.path,
+        filename: fileName,
+        contentType: MediaType('image', 'jpg'),
+      ),
+    });
+    final response = await api.post("/food",
+        data: formData, options: Options(contentType: 'image/jpg'));
+    NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
+    return;
+  }
+
+  Future<dynamic> updateFood(String name, String newName,
+      String foodCategoryName, String unitName, dynamic image) async {
+    FormData formData;
+    if (image == null) {
+      formData = FormData.fromMap({
+        "name": name,
+        "newCategory": foodCategoryName,
+        "newUnit": unitName,
+        "newName": newName,
+      });
+    } else {
+      String fileName = image.path.split('/').last;
+      formData = FormData.fromMap({
+        "name": name,
+        "newCategory": foodCategoryName,
+        "newUnit": unitName,
+        "newName": newName,
+        "image": await MultipartFile.fromFile(
+          image.path,
+          filename: fileName,
+          contentType: MediaType('image', 'jpg'),
+        ),
+      });
     }
+    final response = await api.put(
+      "/food",
+      data: formData,
+      options: Options(contentType: 'image/jpg'),
+    );
+    NotificationHelper.show(
+      response.data['resultMessage']['en'],
+      "SUCCESS",
+    );
+    return response.data;
+  }
+
+  Future<void> deleteFood(String name) async {
+    final response = await api.delete(
+      "/food",
+      data: {
+        'name': name,
+      },
+    );
+    NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
+    return;
   }
 }

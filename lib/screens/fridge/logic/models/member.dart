@@ -30,11 +30,11 @@ class Food extends Equatable {
 
   @override
   List<Object?> get props => [id, categoryName, unitName, name, imageUrl];
-  Future<void> saveLocally() async {
-    await DatabaseFood.insertFood(this);
-  }
+  // Future<void> saveLocally() async {
+  //   await DatabaseFood.insertFood(this);
+  // }
 
-  static Future<dynamic> getLocalFoods() async {
-    return await DatabaseFood.getFoods();
-  }
+  // static Future<dynamic> getLocalFoods() async {
+  //   return await DatabaseFood.getFoods();
+  // }
 }

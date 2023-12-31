@@ -1,23 +1,88 @@
 part of 'bloc.dart';
 
-abstract class GroupState extends Equatable {
-  const GroupState();
+abstract class FoodState extends Equatable {
+  const FoodState();
 
   @override
   List<Object> get props => [];
 }
 
-class GroupLoadInProgressState extends GroupState {}
+class FoodLoadInProgressState extends FoodState {}
 
-class GroupLoadFailureState extends GroupState {}
+class FoodLoadFailureState extends FoodState {}
 
-class GroupLoadSuccessState extends GroupState {
-  final dynamic user;
+class FoodLoadSuccessState extends DataLoadSuccessState {
+  final dynamic food;
 
-  GroupLoadSuccessState({
-    this.user = const {},
+  FoodLoadSuccessState({
+    this.food = const {},
   });
 
   @override
-  List<Object> get props => user;
+  List<Object> get props => [food];
+}
+
+class DataLoadSuccessState extends FoodState {
+  final dynamic unit;
+  final dynamic category;
+
+  DataLoadSuccessState({
+    this.unit = const {},
+    this.category = const {},
+  });
+
+  @override
+  List<Object> get props => [unit, category];
+}
+
+class FoodCreateInProgressState extends FoodState {}
+
+class FoodCreateSuccessState extends FoodState {
+  final dynamic createdFood;
+
+  FoodCreateSuccessState({
+    required this.createdFood,
+  });
+
+  @override
+  List<Object> get props => [createdFood];
+}
+
+class FoodCreateFailureState extends FoodState {}
+
+class FoodMemberAddInProgressState extends FoodState {}
+
+class FoodMemberAddSuccessState extends FoodState {
+  final dynamic addedMember;
+
+  FoodMemberAddSuccessState({
+    required this.addedMember,
+  });
+
+  @override
+  List<Object> get props => [addedMember];
+}
+
+class FoodMemberRemoveInProgressState extends FoodState {}
+
+class FoodMemberRemoveSuccessState extends FoodState {
+  final dynamic removedMember;
+
+  FoodMemberRemoveSuccessState({
+    required this.removedMember,
+  });
+
+  @override
+  List<Object> get props => [removedMember];
+}
+
+class FoodMembersLoadSuccessState extends FoodState {
+  final List<dynamic> members;
+
+  FoodMembersLoadSuccessState({
+    required this.members,
+  });
+
+  @override
+  List<Object> get props => [members];
 }

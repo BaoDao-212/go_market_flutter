@@ -9,15 +9,23 @@ abstract class FoodEvent extends Equatable {
 
 class FoodLoadedEvent extends FoodEvent {}
 
+class DataFoodLoadedEvent extends FoodEvent {}
+
 class FoodCreateEvent extends FoodEvent {
-  final String food;
+  final String name;
+  final XFile image;
+  final String unitName;
+  final String foodCategoryName;
 
   FoodCreateEvent({
-    required this.food,
+    required this.name,
+    required this.image,
+    required this.unitName,
+    required this.foodCategoryName,
   });
 
   @override
-  List<Object> get props => [food];
+  List<Object> get props => [name, image, unitName, foodCategoryName];
 }
 
 class FoodMemberAddEvent extends FoodEvent {
@@ -31,28 +39,36 @@ class FoodMemberAddEvent extends FoodEvent {
   List<Object> get props => [username];
 }
 
-class FoodMemberRemoveEvent extends FoodEvent {
-  final dynamic username;
+class FoodRemoveEvent extends FoodEvent {
+  final String name;
 
-  FoodMemberRemoveEvent({
-    required this.username,
+  FoodRemoveEvent({
+    required this.name,
   });
 
   @override
-  List<Object> get props => [username];
+  List<Object> get props => [name];
 }
 
 class FoodMembersLoadEvent extends FoodEvent {}
 
 class FoodUpdateEvent extends FoodEvent {
-  final String updatedFoodName;
+  final String name;
+  final String newName;
+  final XFile? image;
+  final String unitName;
+  final String foodCategoryName;
 
   FoodUpdateEvent({
-    required this.updatedFoodName,
+    required this.name,
+    required this.newName,
+    this.image,
+    required this.unitName,
+    required this.foodCategoryName,
   });
 
   @override
-  List<Object> get props => [updatedFoodName];
+  List<Object> get props {
+    return [name, newName, image, unitName, foodCategoryName] as List<Object>;
+  }
 }
-
-
