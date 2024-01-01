@@ -1,35 +1,45 @@
 import 'package:equatable/equatable.dart';
-import 'package:shop_app/screens/food/logic/local_db/food.dart';
 
-class Food extends Equatable {
+class Fridge extends Equatable {
   late final int id;
   late final String name;
-  late final String categoryName;
-  late final String unitName;
+  late final String note;
+  late final int quantity;
+  late final String type;
   late final String imageUrl;
+  late final DateTime expiredDate;
+  late final DateTime startDate;
 
-  Food({
+  Fridge({
     required this.id,
-    required this.unitName,
-    required this.categoryName,
+    required this.note,
+    required this.type,
+    required this.quantity,
+    required this.expiredDate,
+    required this.startDate,
     required this.name,
     required this.imageUrl,
   });
-
-  Food.fromJson(Map<String, dynamic> json) {
+  Fridge.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    categoryName = json['FoodCategory']['name'] ?? '';
-    unitName = json['UnitOfMeasurement']['unitName'];
-    name = json['name'] ?? '';
-    imageUrl = json['imageUrl'] ?? '';
+    name = json['Food']['name'] ?? '';
+    note = json['note'] ?? '';
+    quantity = json['quantity'] ?? 1;
+    type = json['Food']['type'] ?? '';
+    imageUrl = json['Food']['imageUrl'] ?? '';
+    expiredDate = DateTime.parse(json['expiredDate']);
+    startDate = DateTime.parse(json['startDate']);
   }
 
-  static List<Food> fromList(List<dynamic> list) {
-    return list.map((e) => Food.fromJson(e)).toList();
+  static List<Fridge> fromList(List<dynamic> list) {
+    return list.map((e) => Fridge.fromJson(e)).toList();
   }
 
   @override
-  List<Object?> get props => [id, categoryName, unitName, name, imageUrl];
+  List<Object?> get props =>
+      [id, note, quantity, startDate, expiredDate, name, imageUrl];
+
+  void add(Fridge fridge) {}
   // Future<void> saveLocally() async {
   //   await DatabaseFood.insertFood(this);
   // }

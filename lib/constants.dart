@@ -57,7 +57,7 @@ class _Environments {
   // final appleSignInRedirectUri =
   //     Uri.parse('https://nest-auth.ubbly.club/api/auth/apple-callback');
 
-  final api = 'http://192.168.43.230:8001/api';
+  final api = 'http://192.168.61.230:8001/api';
 }
 
 _Environments environments = _Environments();

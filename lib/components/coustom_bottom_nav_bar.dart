@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop_app/core/app_export.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
+import 'package:shop_app/screens/fridge/view/screen/fridge_screen.dart';
 import 'package:shop_app/screens/group/view/screen/create_group_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/profile/view/components/profile_screen.dart';
@@ -64,7 +65,9 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
               IconButton(
                 icon: SvgPicture.asset("assets/icons/Chat bubble Icon.svg"),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, FridgeScreen.routeName);
+                },
               ),
               IconButton(
                 icon: SvgPicture.asset(

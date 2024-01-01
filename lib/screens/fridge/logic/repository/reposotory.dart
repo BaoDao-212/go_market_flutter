@@ -1,46 +1,34 @@
-import 'package:shop_app/screens/food/logic/models/models.dart';
-import 'package:shop_app/screens/food/logic/provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:shop_app/screens/fridge/logic/models/models.dart';
+import 'package:shop_app/screens/fridge/logic/provider/provider.dart';
 
-class FoodRepository {
-  final FoodAPIProvider _apiProvider = FoodAPIProvider();
+class FridgeRepository {
+  final FridgeAPIProvider _apiProvider = FridgeAPIProvider();
 
-  FoodRepository();
+  FridgeRepository();
 
-  Future<FoodModel> getFoodList() async {
+  Future<FridgeModel> getFridgeList() async {
     print(1);
-    final apiResponse = await _apiProvider.getFoodlist();
+    final apiResponse = await _apiProvider.getFridgelist();
     return apiResponse;
   }
 
-  Future<dynamic> getUnitName() async {
-    final apiResponse = await _apiProvider.getUnitName();
-    return apiResponse;
+  Future<dynamic> createFridge(
+      String foodName, int useWithin, int quanlity, String note) async {
+    await _apiProvider.createFridge(foodName, useWithin, quanlity, note);
+    final fridges = _apiProvider.getFridgelist();
+    return fridges;
   }
 
-  Future<dynamic> getCategoryFood() async {
-    final apiResponse = await _apiProvider.getCategoryFood();
-    return apiResponse;
-  }
-
-  Future<dynamic> createFood(String name, String foodCategoryName,
-      String unitName, XFile image) async {
-    await _apiProvider.createFood(name, foodCategoryName, unitName, image);
-    final food = _apiProvider.getFoodlist();
+  Future<dynamic> updateFridge( String foodName, int useWithin, int quanlity, String note,int id) async {
+    await _apiProvider.updateFridge(
+       foodName, useWithin, quanlity, note,id);
+    final food = _apiProvider.getFridgelist();
     return food;
   }
 
-  Future<dynamic> updateFood(String name, String newName,
-      String foodCategoryName, String unitName, dynamic image) async {
-    await _apiProvider.updateFood(
-        name, newName, foodCategoryName, unitName, image);
-    final food = _apiProvider.getFoodlist();
-    return food;
-  }
-
-  Future<FoodModel> deleteFood(String name) async {
-    await _apiProvider.deleteFood(name);
-    final foods = await _apiProvider.getFoodlist();
-    return foods;
+  Future<FridgeModel> deleteFridge(String name) async {
+    await _apiProvider.deleteFridge(name);
+    final fridges = await _apiProvider.getFridgelist();
+    return fridges;
   }
 }

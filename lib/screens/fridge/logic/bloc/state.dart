@@ -1,61 +1,59 @@
 part of 'bloc.dart';
 
-abstract class FoodState extends Equatable {
-  const FoodState();
+abstract class FridgeState extends Equatable {
+  const FridgeState();
 
   @override
   List<Object> get props => [];
 }
 
-class FoodLoadInProgressState extends FoodState {}
+class FridgeLoadInProgressState extends FridgeState {}
 
-class FoodLoadFailureState extends FoodState {}
+class FridgeLoadFailureState extends FridgeState {}
 
-class FoodLoadSuccessState extends DataLoadSuccessState {
-  final dynamic food;
+class FridgeLoadSuccessState extends FridgeState {
+  final dynamic fridge;
 
-  FoodLoadSuccessState({
-    this.food = const {},
+  FridgeLoadSuccessState({
+    this.fridge = const {},
   });
 
   @override
-  List<Object> get props => [food];
+  List<Object> get props => [fridge];
 }
 
-class DataLoadSuccessState extends FoodState {
-  final dynamic unit;
-  final dynamic category;
+class FoodLoadedSuccessState extends FridgeState {
+  final dynamic foods;
 
-  DataLoadSuccessState({
-    this.unit = const {},
-    this.category = const {},
+  FoodLoadedSuccessState({
+    this.foods = const {},
   });
 
   @override
-  List<Object> get props => [unit, category];
+  List<Object> get props => [foods];
 }
 
-class FoodCreateInProgressState extends FoodState {}
+class FridgeCreateInProgressState extends FridgeState {}
 
-class FoodCreateSuccessState extends FoodState {
-  final dynamic createdFood;
+class FridgeCreateSuccessState extends FridgeState {
+  final dynamic createdFridge;
 
-  FoodCreateSuccessState({
-    required this.createdFood,
+  FridgeCreateSuccessState({
+    required this.createdFridge,
   });
 
   @override
-  List<Object> get props => [createdFood];
+  List<Object> get props => [createdFridge];
 }
 
-class FoodCreateFailureState extends FoodState {}
+class FridgeCreateFailureState extends FridgeState {}
 
-class FoodMemberAddInProgressState extends FoodState {}
+class FridgeMemberAddInProgressState extends FridgeState {}
 
-class FoodMemberAddSuccessState extends FoodState {
+class FridgeMemberAddSuccessState extends FridgeState {
   final dynamic addedMember;
 
-  FoodMemberAddSuccessState({
+  FridgeMemberAddSuccessState({
     required this.addedMember,
   });
 
@@ -63,12 +61,12 @@ class FoodMemberAddSuccessState extends FoodState {
   List<Object> get props => [addedMember];
 }
 
-class FoodMemberRemoveInProgressState extends FoodState {}
+class FridgeMemberRemoveInProgressState extends FridgeState {}
 
-class FoodMemberRemoveSuccessState extends FoodState {
+class FridgeMemberRemoveSuccessState extends FridgeState {
   final dynamic removedMember;
 
-  FoodMemberRemoveSuccessState({
+  FridgeMemberRemoveSuccessState({
     required this.removedMember,
   });
 
@@ -76,10 +74,10 @@ class FoodMemberRemoveSuccessState extends FoodState {
   List<Object> get props => [removedMember];
 }
 
-class FoodMembersLoadSuccessState extends FoodState {
+class FridgeMembersLoadSuccessState extends FridgeState {
   final List<dynamic> members;
 
-  FoodMembersLoadSuccessState({
+  FridgeMembersLoadSuccessState({
     required this.members,
   });
 

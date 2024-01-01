@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/core/app_export.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
+import 'package:shop_app/screens/auth/logic/repository/auth_repository.dart';
 import 'package:shop_app/screens/auth/view/sign_in/sign_in_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/size_config.dart';
@@ -30,6 +33,18 @@ class _BodyState extends State<Body> {
       "image": "assets/images/splash_3.png"
     },
   ];
+  dynamic accessToken = '';
+  @override
+  void initState() {
+    super.initState();
+    initAuth();
+  }
+
+  void initAuth() async {
+    AuthRepository authRepository = AuthRepository();
+    accessToken = await authRepository.getAccessToken();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -81,8 +96,7 @@ class _BodyState extends State<Body> {
                     Spacer(flex: 1),
                     BlocBuilder<AuthCubit, User?>(
                       builder: (context, user) {
-                        print(user);
-                        if (user == null) {
+                        if (accessToken == null) {
                           return DefaultButton(
                             text: "Continue",
                             press: () {
@@ -90,14 +104,18 @@ class _BodyState extends State<Body> {
                                   context, SignInScreen.routeName);
                             },
                           );
-                        } else
+                        } else {
                           return DefaultButton(
                             text: "Continue",
-                            press: () {
+                            press: () async {
+                              final bloc = context.read<AuthCubit>();
+                              final user = await bloc.updateProfile();
+                              print(user);
                               Navigator.pushNamed(
                                   context, HomeScreen.routeName);
                             },
                           );
+                        }
                       },
                     ),
                     Spacer(),

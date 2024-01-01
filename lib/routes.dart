@@ -5,6 +5,7 @@ import 'package:shop_app/screens/cart/cart_screen.dart';
 import 'package:shop_app/screens/complete_profile/complete_profile_screen.dart';
 import 'package:shop_app/screens/details/details_screen.dart';
 import 'package:shop_app/screens/food/view/screen/foods_screen.dart';
+import 'package:shop_app/screens/fridge/view/screen/fridge_screen.dart';
 import 'package:shop_app/screens/group/view/screen/create_group_screen.dart';
 import 'package:shop_app/screens/group/view/screen/group.screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
@@ -34,6 +35,8 @@ class AppRouter {
         return GroupScreen.route();
       case FoodScreen.routeName:
         return FoodScreen.route();
+      case FridgeScreen.routeName:
+        return FridgeScreen.route();
       case SignInScreen.routeName:
         return SignInScreen.route();
       case DetailsScreen.routeName:

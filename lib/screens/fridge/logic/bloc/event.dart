@@ -1,37 +1,37 @@
 part of 'bloc.dart';
 
-abstract class FoodEvent extends Equatable {
-  const FoodEvent();
+abstract class FridgeEvent extends Equatable {
+  const FridgeEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class FoodLoadedEvent extends FoodEvent {}
+class FridgeLoadedEvent extends FridgeEvent {}
 
-class DataFoodLoadedEvent extends FoodEvent {}
+class DataFoodLoadedEvent extends FridgeEvent {}
 
-class FoodCreateEvent extends FoodEvent {
-  final String name;
-  final XFile image;
-  final String unitName;
-  final String foodCategoryName;
+class FridgeCreateEvent extends FridgeEvent {
+  final String foodName;
+  final int useWithin;
+  final String note;
+  final int quantity;
 
-  FoodCreateEvent({
-    required this.name,
-    required this.image,
-    required this.unitName,
-    required this.foodCategoryName,
+  FridgeCreateEvent({
+    required this.foodName,
+    required this.useWithin,
+    required this.quantity,
+    required this.note,
   });
 
   @override
-  List<Object> get props => [name, image, unitName, foodCategoryName];
+  List<Object> get props => [foodName, quantity, useWithin, note];
 }
 
-class FoodMemberAddEvent extends FoodEvent {
+class FridgeMemberAddEvent extends FridgeEvent {
   final dynamic username;
 
-  FoodMemberAddEvent({
+  FridgeMemberAddEvent({
     required this.username,
   });
 
@@ -39,10 +39,10 @@ class FoodMemberAddEvent extends FoodEvent {
   List<Object> get props => [username];
 }
 
-class FoodRemoveEvent extends FoodEvent {
+class FridgeRemoveEvent extends FridgeEvent {
   final String name;
 
-  FoodRemoveEvent({
+  FridgeRemoveEvent({
     required this.name,
   });
 
@@ -50,25 +50,22 @@ class FoodRemoveEvent extends FoodEvent {
   List<Object> get props => [name];
 }
 
-class FoodMembersLoadEvent extends FoodEvent {}
+class FridgeMembersLoadEvent extends FridgeEvent {}
 
-class FoodUpdateEvent extends FoodEvent {
-  final String name;
-  final String newName;
-  final XFile? image;
-  final String unitName;
-  final String foodCategoryName;
-
-  FoodUpdateEvent({
-    required this.name,
-    required this.newName,
-    this.image,
-    required this.unitName,
-    required this.foodCategoryName,
+class FridgeUpdateEvent extends FridgeEvent {
+  final String foodName;
+  final int useWithin;
+  final String note;
+  final int quantity;
+  final int id;
+  FridgeUpdateEvent({
+    required this.foodName,
+    required this.useWithin,
+    required this.quantity,
+    required this.note,
+    required this.id,
   });
 
   @override
-  List<Object> get props {
-    return [name, newName, image, unitName, foodCategoryName] as List<Object>;
-  }
+  List<Object> get props => [id, foodName, quantity, useWithin, note];
 }

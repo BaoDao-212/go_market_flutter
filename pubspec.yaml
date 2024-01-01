@@ -34,7 +34,7 @@ dependencies:
   path: ^1.8.3
   connectivity:
   path_drawing:
-
+  intl:
 dev_dependencies:
   flutter_test:
     sdk: flutter

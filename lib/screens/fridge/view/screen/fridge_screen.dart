@@ -3,25 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
-import 'package:shop_app/screens/food/logic/bloc/bloc.dart';
-import 'package:shop_app/screens/food/view/components/dialog/add_food.dart';
-import 'package:shop_app/screens/food/view/components/dialog/delete_food.dart';
-import 'package:shop_app/screens/food/view/components/dialog/update_food.dart';
-import 'package:shop_app/screens/food/view/components/member.dart';
+import 'package:shop_app/screens/fridge/logic/bloc/bloc.dart';
+import 'package:shop_app/screens/fridge/view/components/dialog/add.dart';
+import 'package:shop_app/screens/fridge/view/components/dialog/delete.dart';
+import 'package:shop_app/screens/fridge/view/components/dialog/update.dart';
+import 'package:shop_app/screens/fridge/view/components/member.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 
-class FoodScreen extends StatelessWidget {
-  static const String routeName = "/food";
+class FridgeScreen extends StatelessWidget {
+  static const String routeName = "/fridge";
 
   static MaterialPageRoute route() {
     return MaterialPageRoute(builder: (context) {
       return MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => FoodBloc()..add(FoodLoadedEvent()),
+            create: (_) => FridgeBloc()..add(FridgeLoadedEvent()),
           ),
         ],
-        child: FoodScreen(),
+        child: FridgeScreen(),
       );
     });
   }
@@ -30,8 +30,8 @@ class FoodScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocListener<FoodBloc, FoodState>(
-      listenWhen: (_, curr) => curr is FoodLoadSuccessState,
+    return BlocListener<FridgeBloc, FridgeState>(
+      listenWhen: (_, curr) => curr is FridgeLoadSuccessState,
       listener: (context, state) {},
       child: BlocBuilder<AuthCubit, User?>(
         builder: (context, user) {
@@ -45,11 +45,11 @@ class FoodScreen extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('My Food'),
+              title: Text('My Fridge'),
             ),
-            body: BlocBuilder<FoodBloc, FoodState>(
+            body: BlocBuilder<FridgeBloc, FridgeState>(
               builder: (context, state) {
-                if (state is FoodLoadInProgressState) {
+                if (state is FridgeLoadInProgressState) {
                   return Center(
                     child: CircularProgressIndicator(
                       color: theme.primaryColor,
@@ -67,7 +67,7 @@ class FoodScreen extends StatelessWidget {
                           width: 100.0,
                           child: ElevatedButton(
                             onPressed: () {
-                              showAddFoodDialog(context);
+                              showAddFridgeDialog(context);
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 4,
@@ -92,24 +92,32 @@ class FoodScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(16.0),
                         child: RefreshIndicator(
-                          onRefresh: () async =>
-                              context.read<FoodBloc>().add(FoodLoadedEvent()),
-                          child: BlocBuilder<FoodBloc, FoodState>(
+                          onRefresh: () async => context
+                              .read<FridgeBloc>()
+                              .add(FridgeLoadedEvent()),
+                          child: BlocBuilder<FridgeBloc, FridgeState>(
                             builder: (context, state) {
-                              if (state is FoodLoadSuccessState) {
+                              if (state is FridgeLoadSuccessState) {
+                                print(state.fridge);
                                 return ListView(
-                                  children: state.food.foods.map<Widget>((f) {
-                                    return FoodCard(
-                                      name: f?.name ?? '',
-                                      imageUrl: f?.imageUrl ?? '',
-                                      category: f?.categoryName ?? '',
-                                      unitName: f?.unitName ?? '',
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 16.0),
+                                  children:
+                                      state.fridge.fridge.map<Widget>((f) {
+                                    return FridgeCard(
+                                      name: f.name,
+                                      expiredDate: f.expiredDate,
+                                      startDate: f.startDate,
+                                      type: f.type,
+                                      imageUrl: f.imageUrl,
+                                      note: f.note,
+                                      quantity: f.quantity,
                                       onDelete: () {
-                                        _showDeleteFoodDialog(
+                                        _showDeleteFridgeDialog(
                                             context, f?.id, f?.name ?? '');
                                       },
                                       onUpdate: () {
-                                        _showUpdateFoodDialog(context, f);
+                                        _showUpdateFridgeDialog(context, f);
                                       },
                                     );
                                   }).toList(),
@@ -135,33 +143,33 @@ class FoodScreen extends StatelessWidget {
     );
   }
 
-  showAddFoodDialog(BuildContext context) {
-    final bloc = context.read<FoodBloc>();
+  showAddFridgeDialog(BuildContext context) {
+    final bloc = context.read<FridgeBloc>();
     return showDialog(
       context: context,
-      builder: (_) => AddFoodDialog(
+      builder: (_) => AddFridgeDialog(
         bloc: bloc,
       ),
     );
   }
 
-  _showDeleteFoodDialog(BuildContext context, int id, String name) {
+  _showDeleteFridgeDialog(BuildContext context, int id, String name) {
     return showDialog(
       context: context,
-      builder: (_) => DeleteFoodDialog(
-        bloc: context.read<FoodBloc>(),
+      builder: (_) => DeleteFridgeDialog(
+        bloc: context.read<FridgeBloc>(),
         name: name,
       ),
     );
   }
 
-  _showUpdateFoodDialog(BuildContext context, dynamic food) {
-    final bloc = context.read<FoodBloc>();
+  _showUpdateFridgeDialog(BuildContext context, dynamic fridge) {
+    final bloc = context.read<FridgeBloc>();
     return showDialog(
       context: context,
-      builder: (_) => UpdateFoodDialog(
+      builder: (_) => UpdateFridgeDialog(
         bloc: bloc,
-        oldFood: food,
+        fridgeItem: fridge,
       ),
     );
   }

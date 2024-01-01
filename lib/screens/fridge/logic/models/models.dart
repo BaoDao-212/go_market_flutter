@@ -1,21 +1,21 @@
 import 'package:equatable/equatable.dart';
-import 'package:shop_app/screens/food/logic/models/member.dart';
+import 'package:shop_app/screens/fridge/logic/models/member.dart';
 
-class FoodModel extends Equatable {
-  final List<Food> foods;
+class FridgeModel extends Equatable {
+  final List<Fridge> fridge;
 
-  FoodModel({
-    required this.foods,
+  FridgeModel({
+    required this.fridge,
   });
 
-  FoodModel copyWith({
-    List<Food>? foods, // Corrected the type here
+  FridgeModel copyWith({
+    List<Fridge>? fridge,
   }) {
-    return FoodModel(
-      foods: foods ?? this.foods,
+    return FridgeModel(
+      fridge: fridge ?? this.fridge,
     );
   }
 
   @override
-  List<Object?> get props => [foods];
+  List<Object?> get props => [fridge];
 }

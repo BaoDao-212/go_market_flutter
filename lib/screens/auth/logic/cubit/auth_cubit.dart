@@ -40,6 +40,7 @@ class AuthCubit extends Cubit<User?> {
 
   Future<dynamic> updateProfile() async {
     final user = await this.authRepository.getProfile();
+    print(user);
     emit(user);
     return user;
   }
