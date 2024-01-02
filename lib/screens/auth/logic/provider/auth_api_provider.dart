@@ -19,7 +19,7 @@ class AuthAPIProvider {
   }
 
   final dio = Dio();
-  static final String path = 'http://192.168.61.230:8001/api';
+  static final String path = 'http://192.168.43.230:8001/api';
   Future<(Tokens, User)> authenticate(String email, String password) async {
     var response;
     final dio = Dio();

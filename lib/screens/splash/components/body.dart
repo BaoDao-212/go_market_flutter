@@ -96,6 +96,7 @@ class _BodyState extends State<Body> {
                     Spacer(flex: 1),
                     BlocBuilder<AuthCubit, User?>(
                       builder: (context, user) {
+                        print(accessToken);
                         if (accessToken == null) {
                           return DefaultButton(
                             text: "Continue",

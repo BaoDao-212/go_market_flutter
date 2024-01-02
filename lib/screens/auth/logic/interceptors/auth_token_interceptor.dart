@@ -70,7 +70,7 @@ class AuthTokenInterceptor extends Interceptor {
     }
 
     final refreshToken = await repository.getRefreshToken();
-
+    print(refreshToken);
     try {
       final response = await api.post(
         '${environments.api}/user/refresh-token',
@@ -83,7 +83,7 @@ class AuthTokenInterceptor extends Interceptor {
           },
         ),
       );
-
+      print(response.data);
       final tokens = Tokens.fromJson(response.data);
 
       await repository.setTokens(tokens);
