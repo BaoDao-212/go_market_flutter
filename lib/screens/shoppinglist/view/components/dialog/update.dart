@@ -1,46 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:shop_app/screens/food/logic/models/member.dart';
-import 'package:shop_app/screens/fridge/logic/bloc/bloc.dart';
+import 'package:shop_app/screens/group/logic/models/member.dart';
+import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart';
 
-class UpdateFridgeDialog extends StatefulWidget {
-  final FridgeBloc bloc;
-  final dynamic fridgeItem;
+class UpdateShoppingDialog extends StatefulWidget {
+  final ShoppingBloc bloc;
+  final dynamic shoppingItem;
 
-  UpdateFridgeDialog({
+  UpdateShoppingDialog({
     Key? key,
     required this.bloc,
-    required this.fridgeItem,
+    required this.shoppingItem,
   }) : super(key: key);
 
   @override
-  _UpdateFridgeDialogState createState() => _UpdateFridgeDialogState();
+  _UpdateShoppingDialogState createState() => _UpdateShoppingDialogState();
 }
 
-class _UpdateFridgeDialogState extends State<UpdateFridgeDialog> {
-  String _foodName = '';
+class _UpdateShoppingDialogState extends State<UpdateShoppingDialog> {
+  int _listId = 0;
+  String _name = '';
   String _note = '';
-  int _quantity = 0;
-  DateTime _expiryDate = DateTime.now();
-  List<Food>? foods;
+  String _username = '';
+  DateTime _date = DateTime.now();
+  List<Member>? members;
 
   @override
   void initState() {
     super.initState();
-    widget.bloc.add(DataFoodLoadedEvent());
-    _foodName = widget.fridgeItem.name;
-    _note = widget.fridgeItem.note;
-    _quantity = widget.fridgeItem.quantity;
-    print(widget.fridgeItem.expiredDate);
-    _expiryDate = widget.fridgeItem.expiredDate;
+    widget.bloc.add(DataMemberLoadedEvent());
+    _listId = widget.shoppingItem.id;
+    _name = widget.shoppingItem.name;
+    _note = widget.shoppingItem.note;
+    _username = widget.shoppingItem.username;
+    _date = widget.shoppingItem.date;
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Update Fridge',
+        'Update Shopping',
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       content: Container(
@@ -52,35 +53,31 @@ class _UpdateFridgeDialogState extends State<UpdateFridgeDialog> {
               BlocListener(
                 listenWhen: (prev, curr) => prev != curr,
                 listener: (context, state) {
-                  if (state is FoodLoadedSuccessState) {
-                    print(state.foods.foods);
+                  if (state is MemberLoadedSuccessState) {
+                    print(state.members.members);
                     setState(() {
-                      foods = state.foods.foods;
+                      members = state.members.members;
                     });
                   }
                 },
                 bloc: widget.bloc,
                 child: Container(),
               ),
-              if (foods != null)
-                _buildFoodDropdown(
-                    foods!.map((f) => f.name.toString()).toList()),
+              _buildMemberDropdown(
+                  members?.map((f) => f.username.toString()).toList()),
               SizedBox(height: 12),
-              _buildTextField(
-                  'Quantity',
-                  'Enter food quantity',
-                  (value) => _quantity = int.parse(value),
-                  _quantity.toString()),
+              _buildTextField('Quantity', 'Enter member username',
+                  (value) => _username = value, _username.toString()),
               _buildDateTimeField(
                 'Expiry Date',
                 'Select expiry date',
                 (value) => {}, // Không cần sử dụng onChanged
-                _expiryDate != null
-                    ? DateFormat('dd/MM/yyyy').format(_expiryDate)
+                _date != null
+                    ? DateFormat('dd/MM/yyyy').format(_date)
                     : 'Select expiry date',
                 _selectExpiryDate,
               ),
-              _buildTextField('Note', 'Enter food note',
+              _buildTextField('Note', 'Enter member note',
                   (value) => _note = value, _note.toString()),
             ],
           ),
@@ -89,7 +86,7 @@ class _UpdateFridgeDialogState extends State<UpdateFridgeDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            widget.bloc.add(FridgeLoadedEvent());
+            widget.bloc.add(ShoppingLoadedEvent());
             Navigator.pop(context);
           },
           child: Text('Cancel'),
@@ -105,27 +102,31 @@ class _UpdateFridgeDialogState extends State<UpdateFridgeDialog> {
     );
   }
 
-  Widget _buildFoodDropdown(List<String> foods) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: DropdownButtonFormField<String>(
-        value: _foodName,
-        onChanged: (String? newValue) {
-          setState(() {
-            _foodName = newValue!;
-          });
-        },
-        items: foods.map((val) {
-          return DropdownMenuItem(
-            value: val,
-            child: Text(val),
-          );
-        }).toList(),
-        decoration: InputDecoration(
-          labelText: 'Food',
+  Widget _buildMemberDropdown(List<String>? members) {
+    if (members == null || members.isEmpty) {
+      return CircularProgressIndicator();
+    } else {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: DropdownButtonFormField<String>(
+          value: _username,
+          onChanged: (String? newValue) {
+            setState(() {
+              _username = newValue!;
+            });
+          },
+          items: members.map((val) {
+            return DropdownMenuItem(
+              value: val,
+              child: Text(val),
+            );
+          }).toList(),
+          decoration: InputDecoration(
+            labelText: 'Member',
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget _buildTextField(
@@ -173,18 +174,14 @@ class _UpdateFridgeDialogState extends State<UpdateFridgeDialog> {
   }
 
   void _update() {
-    DateTime now = DateTime.now();
-    DateTime midnightToday = DateTime(now.year, now.month, now.day, 0, 0, 0);
-    Duration difference = _expiryDate.difference(midnightToday);
-    int minutesDifference = difference.inMinutes;
-    widget.bloc.add(FridgeUpdateEvent(
-      foodName: _foodName,
-      quantity: _quantity,
-      useWithin: minutesDifference,
+    widget.bloc.add(ShoppingUpdateEvent(
+      assignToUsername: _username,
+      date: _date.toString(),
+      listId: _listId,
       note: _note,
-      id: widget.fridgeItem.id,
+      name: _name,
     ));
-    widget.bloc.add(FridgeLoadedEvent());
+    widget.bloc.add(ShoppingLoadedEvent());
     Navigator.pop(context);
   }
 
@@ -198,9 +195,9 @@ class _UpdateFridgeDialogState extends State<UpdateFridgeDialog> {
       lastDate: DateTime(currentDate.year + 10),
     );
 
-    if (pickedDate != null && pickedDate != _expiryDate) {
+    if (pickedDate != null && pickedDate != _date) {
       setState(() {
-        _expiryDate = pickedDate;
+        _date = pickedDate;
       });
     }
   }

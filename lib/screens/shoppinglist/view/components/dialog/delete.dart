@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/fridge/logic/bloc/bloc.dart'; // Assuming the correct import for the food bloc
+import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart'; // Assuming the correct import for the food bloc
 
-class DeleteFridgeDialog extends StatefulWidget {
-  final FridgeBloc bloc;
+class DeleteShoppingDialog extends StatefulWidget {
+  final ShoppingBloc bloc;
   final String name;
+  final int id;
 
-  DeleteFridgeDialog({
+  DeleteShoppingDialog({
     Key? key,
     required this.bloc,
     required this.name,
+    required this.id,
   }) : super(key: key);
 
   @override
-  _DeleteFridgeDialogState createState() => _DeleteFridgeDialogState();
+  _DeleteShoppingDialogState createState() => _DeleteShoppingDialogState();
 }
 
-class _DeleteFridgeDialogState extends State<DeleteFridgeDialog> {
+class _DeleteShoppingDialogState extends State<DeleteShoppingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Delete Fridge'),
+      title: Text('Delete Shopping'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Fridge is removed from the refrigerator: ${widget.name}",
+            "Shopping: ${widget.name}      ",
           )
         ],
       ),
@@ -33,12 +35,12 @@ class _DeleteFridgeDialogState extends State<DeleteFridgeDialog> {
         TextButton(
           onPressed: () {
             Navigator.pop(context);
-            widget.bloc.add(FridgeLoadedEvent());
+            widget.bloc.add(ShoppingLoadedEvent());
           },
           child: Text('Cancel'),
         ),
         TextButton(
-          onPressed: () => _deleteFridge(),
+          onPressed: () => _deleteShopping(),
           child: Text(
             'Delete',
             style: TextStyle(color: Colors.red),
@@ -48,9 +50,9 @@ class _DeleteFridgeDialogState extends State<DeleteFridgeDialog> {
     );
   }
 
-  _deleteFridge() {
-    widget.bloc.add(FridgeRemoveEvent(name: widget.name));
-    widget.bloc.add(FridgeLoadedEvent());
+  _deleteShopping() {
+    widget.bloc.add(ShoppingRemoveEvent(id: widget.id));
+    widget.bloc.add(ShoppingLoadedEvent());
     Navigator.pop(context);
   }
 }

@@ -1,66 +1,82 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:shop_app/screens/fridge/logic/local_db/fridge.dart';
-import 'package:shop_app/screens/fridge/logic/models/member.dart';
-import 'package:shop_app/screens/fridge/logic/models/models.dart';
 import 'package:shop_app/screens/shared/logic/http/api.dart';
 import 'package:shop_app/screens/shared/view/widgets/dialog/notification_dialog.dart';
+import 'package:shop_app/screens/shoppinglist/logic/local_db/shopping.dart';
+import 'package:shop_app/screens/shoppinglist/logic/models/member.dart';
+import 'package:shop_app/screens/shoppinglist/logic/models/models.dart';
 
-class FridgeAPIProvider {
+class ShoppingAPIProvider {
   Future<bool> isConnectedToNetwork() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     return connectivityResult != ConnectivityResult.none;
   }
 
-  Future<FridgeModel> getFridgelist() async {
+  Future<dynamic> getShoppinglist() async {
     if (await isConnectedToNetwork()) {
-      final response = await api.get("/fridge");
-      List<Fridge> fridges = [];
-      (response.data['fridgeItems'] as List<dynamic>).forEach((m) {
-        final Fridge fridge = Fridge.fromJson(m);
-        fridges.add(fridge);
+      final response = await api.get("/shopping/task");
+      List<Shopping> shoppings = [];
+      (response.data['list'] as List<dynamic>).forEach((m) {
+        final Shopping shopping = Shopping.fromJson(m);
+        shoppings.add(shopping);
       });
-      final f = FridgeModel(fridge: fridges);
-      print(f);
-      await DatabaseFridge.getFridges().then((localFridges) async {
-        DatabaseFridge.deleteAllFridges();
-        if (localFridges.isEmpty) {
-          for (final fridge in fridges) {
-            await DatabaseFridge.insertFridge(fridge);
+      final f = ShoppingModel(shopping: shoppings);
+      await DatabaseShopping.deleteAllShoppings();
+      await DatabaseShopping.getShoppings().then((localShoppings) async {
+        if (localShoppings.isEmpty) {
+          for (final shopping in localShoppings) {
+            await DatabaseShopping.insertShopping(shopping);
           }
         }
       });
       return f;
     } else {
-      final localFridges = await DatabaseFridge.getFridges();
-      final f = FridgeModel(fridge: localFridges);
+      final localShoppings = await DatabaseShopping.getShoppings();
+      final f = ShoppingModel(shopping: localShoppings);
       return f;
     }
   }
 
-  Future<dynamic> createFridge(
-      String foodName, int useWithin, int quantity, String note) async {
+  Future<dynamic> createShopping(
+      String name, String assignToUsername, String note, String date) async {
+    print(1);
     final response = await api.post(
-      "/fridge",
+      "/shopping",
       data: {
-        'foodName': foodName,
-        'useWithin': useWithin,
-        'quantity': quantity,
+        'name': name,
+        'assignToUsername': assignToUsername,
         'note': note,
+        'date': date,
       },
     );
     NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
     return;
   }
 
-  Future<dynamic> updateFridge(
-      String foodName, int useWithin, int quantity, String note, int id) async {
-    final response = await api.put(
-      "/fridge",
+  Future<dynamic> createTask(
+      String name, String assignToUsername, String note, String date) async {
+    final response = await api.post(
+      "    print(1);
+",
       data: {
-        'itemId': id,
-        'newFoodName': foodName,
-        'newUseWithin': useWithin,
-        'newQuantity': quantity,
+        'name': name,
+        'assignToUsername': assignToUsername,
+        'note': note,
+        'date': date,
+      },
+    );
+    NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
+    return;
+  }
+
+  Future<dynamic> updateShopping(int id, String name, String assignToUsername,
+      String note, String date) async {
+    final response = await api.put(
+      "/shopping",
+      data: {
+        'listId': id,
+        'newName': name,
+        'newAssignToUsername': assignToUsername,
+        'newDate': date,
         'newNote': note,
       },
     );
@@ -71,12 +87,11 @@ class FridgeAPIProvider {
     return response.data;
   }
 
-  Future<void> deleteFridge(String name) async {
-    print(name);
+  Future<void> deleteShopping(int id) async {
     final response = await api.delete(
-      "/fridge",
+      "/shopping",
       data: {
-        'foodName': name,
+        'listId': id,
       },
     );
     NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");

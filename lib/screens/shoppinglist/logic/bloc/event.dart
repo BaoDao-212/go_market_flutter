@@ -1,37 +1,39 @@
 part of 'bloc.dart';
 
-abstract class FridgeEvent extends Equatable {
-  const FridgeEvent();
+abstract class ShoppingEvent extends Equatable {
+  const ShoppingEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class FridgeLoadedEvent extends FridgeEvent {}
+class ShoppingLoadedEvent extends ShoppingEvent {}
 
-class DataFoodLoadedEvent extends FridgeEvent {}
+class DataMemberLoadedEvent extends ShoppingEvent {}
 
-class FridgeCreateEvent extends FridgeEvent {
-  final String foodName;
-  final int useWithin;
+class DataFoodLoadedEvent extends ShoppingEvent {}
+
+class ShoppingCreateEvent extends ShoppingEvent {
+  final String name;
+  final String assignToUsername;
   final String note;
-  final int quantity;
+  final String date;
 
-  FridgeCreateEvent({
-    required this.foodName,
-    required this.useWithin,
-    required this.quantity,
+  ShoppingCreateEvent({
+    required this.name,
+    required this.assignToUsername,
     required this.note,
+    required this.date,
   });
 
   @override
-  List<Object> get props => [foodName, quantity, useWithin, note];
+  List<Object> get props => [name, assignToUsername, date, note];
 }
 
-class FridgeMemberAddEvent extends FridgeEvent {
+class ShoppingMemberAddEvent extends ShoppingEvent {
   final dynamic username;
 
-  FridgeMemberAddEvent({
+  ShoppingMemberAddEvent({
     required this.username,
   });
 
@@ -39,33 +41,33 @@ class FridgeMemberAddEvent extends FridgeEvent {
   List<Object> get props => [username];
 }
 
-class FridgeRemoveEvent extends FridgeEvent {
-  final String name;
-
-  FridgeRemoveEvent({
-    required this.name,
-  });
-
-  @override
-  List<Object> get props => [name];
-}
-
-class FridgeMembersLoadEvent extends FridgeEvent {}
-
-class FridgeUpdateEvent extends FridgeEvent {
-  final String foodName;
-  final int useWithin;
-  final String note;
-  final int quantity;
+class ShoppingRemoveEvent extends ShoppingEvent {
   final int id;
-  FridgeUpdateEvent({
-    required this.foodName,
-    required this.useWithin,
-    required this.quantity,
-    required this.note,
+
+  ShoppingRemoveEvent({
     required this.id,
   });
 
   @override
-  List<Object> get props => [id, foodName, quantity, useWithin, note];
+  List<Object> get props => [id];
+}
+
+class ShoppingMembersLoadEvent extends ShoppingEvent {}
+
+class ShoppingUpdateEvent extends ShoppingEvent {
+  final String name;
+  final String assignToUsername;
+  final String note;
+  final String date;
+  final int listId;
+  ShoppingUpdateEvent({
+    required this.name,
+    required this.assignToUsername,
+    required this.date,
+    required this.note,
+    required this.listId,
+  });
+
+  @override
+  List<Object> get props => [listId, assignToUsername, name, date, note];
 }

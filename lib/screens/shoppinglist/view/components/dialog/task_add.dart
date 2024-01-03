@@ -4,19 +4,19 @@ import 'package:intl/intl.dart';
 import 'package:shop_app/screens/group/logic/models/member.dart';
 import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart';
 
-class AddShoppingDialog extends StatefulWidget {
+class AddTaskDialog extends StatefulWidget {
   final ShoppingBloc bloc;
 
-  AddShoppingDialog({
+  AddTaskDialog({
     Key? key,
     required this.bloc,
   }) : super(key: key);
 
   @override
-  _AddShoppingDialogState createState() => _AddShoppingDialogState();
+  _AddTaskDialogState createState() => _AddTaskDialogState();
 }
 
-class _AddShoppingDialogState extends State<AddShoppingDialog> {
+class _AddTaskDialogState extends State<AddTaskDialog> {
   String _name = '';
   String _note = '';
   String _assignToUsername = '';

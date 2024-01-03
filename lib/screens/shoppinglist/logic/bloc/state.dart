@@ -12,14 +12,25 @@ class ShoppingLoadInProgressState extends ShoppingState {}
 class ShoppingLoadFailureState extends ShoppingState {}
 
 class ShoppingLoadSuccessState extends ShoppingState {
-  final dynamic fridge;
+  final dynamic shopping;
 
   ShoppingLoadSuccessState({
-    this.fridge = const {},
+    this.shopping = const {},
   });
 
   @override
-  List<Object> get props => [fridge];
+  List<Object> get props => [shopping];
+}
+
+class MemberLoadedSuccessState extends ShoppingState {
+  final dynamic members;
+
+  MemberLoadedSuccessState({
+    this.members = const {},
+  });
+
+  @override
+  List<Object> get props => [members];
 }
 
 class FoodLoadedSuccessState extends ShoppingState {

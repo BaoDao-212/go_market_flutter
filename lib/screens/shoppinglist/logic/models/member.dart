@@ -1,20 +1,19 @@
 import 'package:equatable/equatable.dart';
-import 'package:shop_app/screens/shoppinglist/logic/models/task.dart';
 
 class Shopping extends Equatable {
   late final int id;
   late final String name;
+  late final String username;
   late final String note;
   late final int belongsToGroupAdminId;
   late final int assignedToUserId;
-  late final String type;
   late final DateTime date;
-  late final List<Task> tasks;
+  late final List<dynamic> tasks;
 
   Shopping({
     required this.id,
     required this.note,
-    required this.type,
+    required this.username,
     required this.date,
     required this.name,
     required this.tasks,
@@ -23,6 +22,7 @@ class Shopping extends Equatable {
     id = json['id'];
     name = json['name'];
     note = json['note'] ?? '';
+    username = json['username'] ?? '';
     assignedToUserId = json['assignedToUserId'] ?? 1;
     belongsToGroupAdminId = json['belongsToGroupAdminId'] ?? 1;
     date = DateTime.parse(json['date']);
@@ -34,6 +34,14 @@ class Shopping extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, note, date, name, assignedToUserId, belongsToGroupAdminId, tasks];
+  List<Object?> get props => [
+        id,
+        note,
+        date,
+        name,
+        assignedToUserId,
+        belongsToGroupAdminId,
+        tasks,
+        username,
+      ];
 }

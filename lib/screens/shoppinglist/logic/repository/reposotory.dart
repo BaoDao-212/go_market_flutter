@@ -1,34 +1,33 @@
-import 'package:shop_app/screens/fridge/logic/models/models.dart';
-import 'package:shop_app/screens/fridge/logic/provider/provider.dart';
+import 'package:shop_app/screens/shoppinglist/logic/models/models.dart';
+import 'package:shop_app/screens/shoppinglist/logic/provider/provider.dart';
 
-class FridgeRepository {
-  final FridgeAPIProvider _apiProvider = FridgeAPIProvider();
+class ShoppingRepository {
+  final ShoppingAPIProvider _apiProvider = ShoppingAPIProvider();
 
-  FridgeRepository();
+  ShoppingRepository();
 
-  Future<FridgeModel> getFridgeList() async {
-    print(1);
-    final apiResponse = await _apiProvider.getFridgelist();
+  Future<ShoppingModel> getShoppingList() async {
+    final apiResponse = await _apiProvider.getShoppinglist();
     return apiResponse;
   }
 
-  Future<dynamic> createFridge(
-      String foodName, int useWithin, int quanlity, String note) async {
-    await _apiProvider.createFridge(foodName, useWithin, quanlity, note);
-    final fridges = _apiProvider.getFridgelist();
+  Future<dynamic> createShopping(
+      String name, String assignToUsername, String note, String date) async {
+    await _apiProvider.createShopping(name, assignToUsername, note, date);
+    final fridges = _apiProvider.getShoppinglist();
     return fridges;
   }
 
-  Future<dynamic> updateFridge( String foodName, int useWithin, int quanlity, String note,int id) async {
-    await _apiProvider.updateFridge(
-       foodName, useWithin, quanlity, note,id);
-    final food = _apiProvider.getFridgelist();
-    return food;
+  Future<dynamic> updateShopping(int id, String name, String assignToUsername,
+      String note, String date) async {
+    await _apiProvider.updateShopping(id, name, assignToUsername, note, date);
+    final shopping = _apiProvider.getShoppinglist();
+    return shopping;
   }
 
-  Future<FridgeModel> deleteFridge(String name) async {
-    await _apiProvider.deleteFridge(name);
-    final fridges = await _apiProvider.getFridgelist();
+  Future<ShoppingModel> deleteShopping(int id) async {
+    await _apiProvider.deleteShopping(id);
+    final fridges = await _apiProvider.getShoppinglist();
     return fridges;
   }
 }

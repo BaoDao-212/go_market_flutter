@@ -1,21 +1,21 @@
 import 'dart:async';
-import 'package:image_picker/image_picker.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_app/screens/food/logic/models/models.dart';
-import 'package:shop_app/screens/food/logic/repository/reposotory.dart';
-import 'package:shop_app/screens/fridge/logic/models/models.dart';
-import 'package:shop_app/screens/fridge/logic/repository/reposotory.dart';
+import 'package:shop_app/screens/group/logic/models/models.dart';
+import 'package:shop_app/screens/group/logic/repository/reposotory.dart';
+import 'package:shop_app/screens/shoppinglist/logic/models/models.dart';
+import 'package:shop_app/screens/shoppinglist/logic/repository/reposotory.dart';
 import '/core/app_export.dart';
 part 'event.dart';
 part 'state.dart';
 
 class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
   ShoppingRepository repository = ShoppingRepository();
-  FoodRepository repositoryFood = FoodRepository();
+  GroupRepository repositoryMember = GroupRepository();
 
   ShoppingBloc() : super(ShoppingLoadInProgressState()) {
     on<ShoppingLoadedEvent>(_onShoppingLoad);
+    on<DataMemberLoadedEvent>(_onMemberLoad);
     on<DataFoodLoadedEvent>(_onFoodLoad);
     on<ShoppingCreateEvent>(_onShoppingCreate);
     on<ShoppingUpdateEvent>(_onShoppingUpdate);
@@ -26,8 +26,19 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
       ShoppingLoadedEvent event, Emitter<ShoppingState> emit) async {
     emit.call(ShoppingLoadInProgressState());
     try {
-      final ShoppingModel fridge = await repository.getShoppingList();
-      emit.call(ShoppingLoadSuccessState(fridge: fridge));
+      final ShoppingModel shopping = await repository.getShoppingList();
+      emit.call(ShoppingLoadSuccessState(shopping: shopping));
+    } catch (e) {
+      emit.call(ShoppingLoadFailureState());
+    }
+  }
+
+  FutureOr<void> _onMemberLoad(
+      DataMemberLoadedEvent event, Emitter<ShoppingState> emit) async {
+    emit.call(ShoppingLoadInProgressState());
+    try {
+      final GroupModel members = await repositoryMember.getMemberList();
+      emit.call(MemberLoadedSuccessState(members: members));
     } catch (e) {
       emit.call(ShoppingLoadFailureState());
     }
@@ -37,8 +48,8 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
       DataFoodLoadedEvent event, Emitter<ShoppingState> emit) async {
     emit.call(ShoppingLoadInProgressState());
     try {
-      final FoodModel food = await repositoryFood.getFoodList();
-      emit.call(FoodLoadedSuccessState(foods: food));
+      final foods = await repositoryMember.getMemberList();
+      emit.call(FoodLoadedSuccessState(foods: foods));
     } catch (e) {
       emit.call(ShoppingLoadFailureState());
     }
@@ -48,12 +59,10 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
       ShoppingCreateEvent event, Emitter<ShoppingState> emit) async {
     emit.call(ShoppingLoadInProgressState());
     try {
-      print(event.foodName);
-      print(event.useWithin);
-      print(event.quantity);
-      final fridge = await repository.createShopping(
-          event.foodName, event.useWithin, event.quantity, event.note);
-      emit.call(ShoppingLoadSuccessState(fridge: fridge));
+      print(0);
+      final shopping = await repository.createShopping(
+          event.name, event.assignToUsername, event.note, event.date);
+      emit.call(ShoppingLoadSuccessState(shopping: shopping));
     } catch (e) {
       emit.call(ShoppingLoadFailureState());
     }
@@ -63,12 +72,12 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
       ShoppingUpdateEvent event, Emitter<ShoppingState> emit) async {
     emit.call(ShoppingLoadInProgressState());
     try {
-      final f = await repository.updateShopping(event.foodName, event.useWithin,
-          event.quantity, event.note, event.id);
-      emit.call(ShoppingLoadSuccessState(fridge: f));
+      final f = await repository.updateShopping(event.listId, event.name,
+          event.assignToUsername, event.note, event.date);
+      emit.call(ShoppingLoadSuccessState(shopping: f));
     } catch (e) {
       final ShoppingModel f = await repository.getShoppingList();
-      emit.call(ShoppingLoadSuccessState(fridge: f));
+      emit.call(ShoppingLoadSuccessState(shopping: f));
     }
   }
 
@@ -76,8 +85,8 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
       ShoppingRemoveEvent event, Emitter<ShoppingState> emit) async {
     emit.call(ShoppingLoadInProgressState());
     try {
-      final fridge = await repository.deleteShopping(event.name);
-      emit.call(ShoppingLoadSuccessState(fridge: fridge));
+      final shopping = await repository.deleteShopping(event.id);
+      emit.call(ShoppingLoadSuccessState(shopping: shopping));
     } catch (e) {
       emit.call(ShoppingLoadFailureState());
     }

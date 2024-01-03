@@ -3,25 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
-import 'package:shop_app/screens/fridge/logic/bloc/bloc.dart';
-import 'package:shop_app/screens/fridge/view/components/dialog/add.dart';
-import 'package:shop_app/screens/fridge/view/components/dialog/delete.dart';
-import 'package:shop_app/screens/fridge/view/components/dialog/update.dart';
-import 'package:shop_app/screens/fridge/view/components/member.dart';
+import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/add.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/delete.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/update.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/shopping_card.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 
-class FridgeScreen extends StatelessWidget {
-  static const String routeName = "/fridge";
+class ShoppingScreen extends StatelessWidget {
+  static const String routeName = "/shoppping";
 
   static MaterialPageRoute route() {
     return MaterialPageRoute(builder: (context) {
       return MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => FridgeBloc()..add(FridgeLoadedEvent()),
+            create: (_) => ShoppingBloc()..add(ShoppingLoadedEvent()),
           ),
         ],
-        child: FridgeScreen(),
+        child: ShoppingScreen(),
       );
     });
   }
@@ -30,8 +30,8 @@ class FridgeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocListener<FridgeBloc, FridgeState>(
-      listenWhen: (_, curr) => curr is FridgeLoadSuccessState,
+    return BlocListener<ShoppingBloc, ShoppingState>(
+      listenWhen: (_, curr) => curr is ShoppingLoadSuccessState,
       listener: (context, state) {},
       child: BlocBuilder<AuthCubit, User?>(
         builder: (context, user) {
@@ -45,11 +45,11 @@ class FridgeScreen extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('My Fridge'),
+              title: Text('My Shopping'),
             ),
-            body: BlocBuilder<FridgeBloc, FridgeState>(
+            body: BlocBuilder<ShoppingBloc, ShoppingState>(
               builder: (context, state) {
-                if (state is FridgeLoadInProgressState) {
+                if (state is ShoppingLoadInProgressState) {
                   return Center(
                     child: CircularProgressIndicator(
                       color: theme.primaryColor,
@@ -67,7 +67,7 @@ class FridgeScreen extends StatelessWidget {
                           width: 100.0,
                           child: ElevatedButton(
                             onPressed: () {
-                              showAddFridgeDialog(context);
+                              showAddShoppingDialog(context);
                             },
                             style: ElevatedButton.styleFrom(
                               elevation: 4,
@@ -93,31 +93,28 @@ class FridgeScreen extends StatelessWidget {
                         padding: EdgeInsets.all(16.0),
                         child: RefreshIndicator(
                           onRefresh: () async => context
-                              .read<FridgeBloc>()
-                              .add(FridgeLoadedEvent()),
-                          child: BlocBuilder<FridgeBloc, FridgeState>(
+                              .read<ShoppingBloc>()
+                              .add(ShoppingLoadedEvent()),
+                          child: BlocBuilder<ShoppingBloc, ShoppingState>(
                             builder: (context, state) {
-                              if (state is FridgeLoadSuccessState) {
-                                print(state.fridge);
+                              if (state is ShoppingLoadSuccessState) {
+                                print(state.shopping.shopping);
                                 return ListView(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 8.0, vertical: 16.0),
                                   children:
-                                      state.fridge.fridge.map<Widget>((f) {
-                                    return FridgeCard(
+                                      state.shopping.shopping.map<Widget>((f) {
+                                    return ShoppingCard(
                                       name: f.name,
-                                      expiredDate: f.expiredDate,
-                                      startDate: f.startDate,
-                                      type: f.type,
-                                      imageUrl: f.imageUrl,
+                                      date: f.date,
+                                      tasks: f.tasks,
                                       note: f.note,
-                                      quantity: f.quantity,
                                       onDelete: () {
-                                        _showDeleteFridgeDialog(
+                                        _showDeleteShoppingDialog(
                                             context, f?.id, f?.name ?? '');
                                       },
                                       onUpdate: () {
-                                        _showUpdateFridgeDialog(context, f);
+                                        _showUpdateShoppingDialog(context, f);
                                       },
                                     );
                                   }).toList(),
@@ -143,33 +140,34 @@ class FridgeScreen extends StatelessWidget {
     );
   }
 
-  showAddFridgeDialog(BuildContext context) {
-    final bloc = context.read<FridgeBloc>();
+  showAddShoppingDialog(BuildContext context) {
+    final bloc = context.read<ShoppingBloc>();
     return showDialog(
       context: context,
-      builder: (_) => AddFridgeDialog(
+      builder: (_) => AddShoppingDialog(
         bloc: bloc,
       ),
     );
   }
 
-  _showDeleteFridgeDialog(BuildContext context, int id, String name) {
+  _showDeleteShoppingDialog(BuildContext context, int id, String name) {
     return showDialog(
       context: context,
-      builder: (_) => DeleteFridgeDialog(
-        bloc: context.read<FridgeBloc>(),
+      builder: (_) => DeleteShoppingDialog(
+        bloc: context.read<ShoppingBloc>(),
         name: name,
+        id: id,
       ),
     );
   }
 
-  _showUpdateFridgeDialog(BuildContext context, dynamic fridge) {
-    final bloc = context.read<FridgeBloc>();
+  _showUpdateShoppingDialog(BuildContext context, dynamic shoppping) {
+    final bloc = context.read<ShoppingBloc>();
     return showDialog(
       context: context,
-      builder: (_) => UpdateFridgeDialog(
+      builder: (_) => UpdateShoppingDialog(
         bloc: bloc,
-        fridgeItem: fridge,
+        shoppingItem: shoppping,
       ),
     );
   }

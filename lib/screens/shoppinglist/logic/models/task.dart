@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:path/path.dart';
 
 class Task extends Equatable {
   late final int id;
@@ -7,21 +8,25 @@ class Task extends Equatable {
   late final int imageUrl;
   late final String type;
   late final String unitName;
+  late final int quantity;
 
   Task({
     required this.id,
     required this.done,
     required this.type,
+    required this.quantity,
     required this.foodName,
     required this.unitName,
+    required this.imageUrl,
   });
   Task.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    foodName = json['foodName'];
-    done = json['done'] ?? '';
-    unitName = json['unitName'] ?? '';
-    type = json['type'] ?? '1';
-    imageUrl = json['imageUrl'] ?? '1';
+    foodName = json['Food.name'];
+    done = json['done'] ?? 0;
+    quantity = json['quantity'] ?? 1;
+    unitName = json['Food.UnitOfMeasurement.unitName'] ?? '';
+    type = json['Food.type'] ?? '';
+    imageUrl = json['Food.imageUrl'] ?? '';
   }
 
   static List<Task> fromList(List<dynamic> list) {
@@ -29,7 +34,8 @@ class Task extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, done, foodName, type, imageUrl, unitName];
+  List<Object?> get props =>
+      [id, done, foodName, type, imageUrl, unitName, quantity];
 
   void add(Task fridge) {}
 }

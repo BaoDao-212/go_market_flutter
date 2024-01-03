@@ -12,6 +12,7 @@ import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/otp/otp_screen.dart';
 import 'package:shop_app/screens/profile/view/components/profile_screen.dart';
 import 'package:shop_app/screens/profile/view/my_account/my_account.dart';
+import 'package:shop_app/screens/shoppinglist/view/screen/shopping_screen.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 import 'package:shop_app/screens/auth/view/forgot_password/forgot_password_screen.dart';
 import 'package:shop_app/screens/auth/view/sign_in/sign_in_screen.dart';
@@ -37,6 +38,8 @@ class AppRouter {
         return FoodScreen.route();
       case FridgeScreen.routeName:
         return FridgeScreen.route();
+      case ShoppingScreen.routeName:
+        return ShoppingScreen.route();
       case SignInScreen.routeName:
         return SignInScreen.route();
       case DetailsScreen.routeName:

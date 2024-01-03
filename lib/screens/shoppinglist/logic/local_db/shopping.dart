@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:path/path.dart';
-import 'package:shop_app/screens/shopping/logic/bloc/bloc.dart';
-import 'package:shop_app/screens/shopping/logic/models/member.dart';
+import 'package:shop_app/screens/shoppinglist/logic/models/member.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 
@@ -19,12 +18,12 @@ class DatabaseShopping {
           CREATE TABLE $tableName(
             id INTEGER PRIMARY KEY,
             name TEXT,
-            quantity INTEGER,
             note TEXT,
-            type TEXT,
-            imageUrl TEXT,
-            expiredDate TEXT,
-            startDate TEXT
+            username TEXT,
+            assignedToUserId INTERGER,
+            belongsToGroupAdminId INTERGER,
+            date TEXT,
+            tasks TEXT
           )
         ''');
       },
@@ -40,13 +39,11 @@ class DatabaseShopping {
         'id': shopping.id,
         'name': shopping.name,
         'note': shopping.note,
-        'quantity': shopping.quantity,
-        'type': shopping.type,
-        'startDate':
-            DateFormat('yyyy-MM-dd hh:mm:ss').format(shopping.startDate),
-        'expiredDate':
-            DateFormat('yyyy-MM-dd hh:mm:ss').format(shopping.expiredDate),
-        'imageUrl': shopping.imageUrl,
+        'username': shopping.username,
+        'tasks': shopping.tasks.toString(),
+        'assignedToUserId': 1,
+        'belongsToGroupAdminId': 1,
+        'date': DateFormat('yyyy-MM-dd hh:mm:ss').format(shopping.date),
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -58,19 +55,18 @@ class DatabaseShopping {
   }
 
   static Future<List<Shopping>> getShoppings() async {
+    print(0);
     final Database db = await openDatabaseShopping();
     final List<Map<String, dynamic>> maps = await db.query(tableName);
-    print(maps);
+    // print(maps);
     return List.generate(maps.length, (i) {
       return Shopping(
         id: maps[i]['id'],
         name: maps[i]['name'],
         note: maps[i]['note'],
-        quantity: maps[i]['quantity'],
-        type: maps[i]['type'],
-        startDate: DateTime.parse(maps[i]['startDate']),
-        expiredDate: DateTime.parse(maps[i]['expiredDate']),
-        imageUrl: maps[i]['imageUrl'],
+        tasks: (maps[i]['tasks']),
+        username: (maps[i]['username']),
+        date: DateTime.parse(maps[i]['date']),
       );
     });
   }
