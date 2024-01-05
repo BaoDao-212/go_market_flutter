@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/task/delete.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/task/update.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/task/update_state.dart';
 
 class ShoppingCard extends StatefulWidget {
   final String name;
   final String note;
   final dynamic tasks;
   final DateTime date;
+  final String username;
   final VoidCallback onDelete;
   final VoidCallback onUpdate;
+  final VoidCallback onCreate;
 
   ShoppingCard({
     required this.name,
+    required this.username,
     required this.note,
     required this.date,
     required this.tasks,
     required this.onDelete,
+    required this.onCreate,
     required this.onUpdate,
   });
 
@@ -28,7 +37,12 @@ class _ShoppingCardState extends State<ShoppingCard> {
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width;
-    double cardHeight = cardWidth * 1.5;
+    var text = Text(
+      'Member: ${widget.username}',
+      style: TextStyle(
+        color: Colors.grey,
+      ),
+    );
     return Card(
       margin: EdgeInsets.only(bottom: 20),
       elevation: 5,
@@ -54,15 +68,21 @@ class _ShoppingCardState extends State<ShoppingCard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          widget.name,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            widget.name,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         Row(
                           children: [
+                            IconButton(
+                              icon: Icon(Icons.add, color: Colors.green),
+                              onPressed: widget.onCreate,
+                            ),
                             IconButton(
                               icon: Icon(Icons.update, color: Colors.green),
                               onPressed: widget.onUpdate,
@@ -104,6 +124,7 @@ class _ShoppingCardState extends State<ShoppingCard> {
 
 class TaskListWidget extends StatelessWidget {
   final dynamic tasks;
+  // final ShoppingBloc bloc;
 
   TaskListWidget({required this.tasks});
 
@@ -117,7 +138,7 @@ class TaskListWidget extends StatelessWidget {
         children: [
           for (var task in tasks)
             Container(
-              margin: EdgeInsets.only(bottom: 8.0, left: 10),
+              margin: EdgeInsets.only(bottom: 8.0),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: task['done'] == 1 ? Colors.green : Colors.red,
@@ -131,7 +152,7 @@ class TaskListWidget extends StatelessWidget {
                     leading: Image.network(
                       task['Food.imageUrl'],
                       width: 80.0,
-                      height: 80.0,
+                      height: 120.0,
                       fit: BoxFit.cover,
                     ),
                     title: Text(
@@ -163,9 +184,67 @@ class TaskListWidget extends StatelessWidget {
                         task['done'] == 1 ? 'DONE' : 'TO DO',
                         style: TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
                         ),
                       ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: Icon(Icons.edit, color: Colors.blue),
+                            title: Text('Edit'),
+                            onTap: () async {
+                              print('Edit onTap executed');
+                              final bloc = context.read<ShoppingBloc>();
+                              showDialog(
+                                context: context,
+                                builder: (_) => UpdateTaskDialog(
+                                  bloc: bloc,
+                                  task: task,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: Icon(Icons.edit, color: Colors.blue),
+                            title: Text('Update state'),
+                            onTap: () async {
+                              final bloc = context.read<ShoppingBloc>();
+                              showDialog(
+                                context: context,
+                                builder: (_) => UpdateStateTaskDialog(
+                                  bloc: bloc,
+                                  task: task,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        PopupMenuItem(
+                          child: ListTile(
+                            leading: Icon(Icons.delete, color: Colors.red),
+                            title: Text('Delete'),
+                            onTap: () async {
+                              final bloc = context.read<ShoppingBloc>();
+                              showDialog(
+                                context: context,
+                                builder: (_) => DeleteTaskDialog(
+                                  bloc: bloc,
+                                  id: task['id'],
+                                  name: task['Food.name'],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

@@ -4,9 +4,10 @@ import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart';
-import 'package:shop_app/screens/shoppinglist/view/components/dialog/add.dart';
-import 'package:shop_app/screens/shoppinglist/view/components/dialog/delete.dart';
-import 'package:shop_app/screens/shoppinglist/view/components/dialog/update.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/shopping/add.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/shopping/delete.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/shopping/update.dart';
+import 'package:shop_app/screens/shoppinglist/view/components/dialog/task/add.dart';
 import 'package:shop_app/screens/shoppinglist/view/components/shopping_card.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 
@@ -106,6 +107,7 @@ class ShoppingScreen extends StatelessWidget {
                                       state.shopping.shopping.map<Widget>((f) {
                                     return ShoppingCard(
                                       name: f.name,
+                                      username: f.username,
                                       date: f.date,
                                       tasks: f.tasks,
                                       note: f.note,
@@ -116,11 +118,13 @@ class ShoppingScreen extends StatelessWidget {
                                       onUpdate: () {
                                         _showUpdateShoppingDialog(context, f);
                                       },
+                                      onCreate: () {
+                                        _showAddCreateDialog(context, f.id);
+                                      },
                                     );
                                   }).toList(),
                                 );
                               } else {
-                                // Handle other states if needed
                                 return Center(
                                   child: CircularProgressIndicator(),
                                 );
@@ -168,6 +172,17 @@ class ShoppingScreen extends StatelessWidget {
       builder: (_) => UpdateShoppingDialog(
         bloc: bloc,
         shoppingItem: shoppping,
+      ),
+    );
+  }
+
+  _showAddCreateDialog(BuildContext context, int listId) {
+    final bloc = context.read<ShoppingBloc>();
+    return showDialog(
+      context: context,
+      builder: (_) => AddTaskDialog(
+        bloc: bloc,
+        listId: listId,
       ),
     );
   }

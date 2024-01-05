@@ -4,36 +4,44 @@ import 'package:intl/intl.dart';
 import 'package:shop_app/screens/group/logic/models/member.dart';
 import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart';
 
-class AddTaskDialog extends StatefulWidget {
+class UpdateShoppingDialog extends StatefulWidget {
   final ShoppingBloc bloc;
+  final dynamic shoppingItem;
 
-  AddTaskDialog({
+  UpdateShoppingDialog({
     Key? key,
     required this.bloc,
+    required this.shoppingItem,
   }) : super(key: key);
 
   @override
-  _AddTaskDialogState createState() => _AddTaskDialogState();
+  _UpdateShoppingDialogState createState() => _UpdateShoppingDialogState();
 }
 
-class _AddTaskDialogState extends State<AddTaskDialog> {
+class _UpdateShoppingDialogState extends State<UpdateShoppingDialog> {
+  int _listId = 0;
   String _name = '';
   String _note = '';
-  String _assignToUsername = '';
-  DateTime _expiryDate = DateTime.now();
+  String _username = '';
+  DateTime _date = DateTime.now();
   List<Member>? members;
 
   @override
   void initState() {
     super.initState();
     widget.bloc.add(DataMemberLoadedEvent());
+    _listId = widget.shoppingItem.id;
+    _name = widget.shoppingItem.name;
+    _note = widget.shoppingItem.note;
+    _username = widget.shoppingItem.username;
+    _date = widget.shoppingItem.date;
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Add Shopping',
+        'Update Shopping',
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       content: Container(
@@ -56,18 +64,16 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 child: Container(),
               ),
               _buildMemberDropdown(
-                members?.map((f) => f.username.toString()).toList(),
-              ),
+                  members?.map((f) => f.username.toString()).toList()),
               SizedBox(height: 12),
-              _buildTextField('Name', 'Enter shopping name',
-                  (value) => _name = value, _name.toString()),
-              SizedBox(height: 12),
+              _buildTextField('Name', 'Enter shoppping name',
+                  (value) => _username = value, _username.toString()),
               _buildDateTimeField(
                 'Expiry Date',
                 'Select expiry date',
-                (value) => {},
-                _expiryDate != null
-                    ? DateFormat('dd/MM/yyyy').format(_expiryDate)
+                (value) => {}, // Không cần sử dụng onChanged
+                _date != null
+                    ? DateFormat('dd/MM/yyyy').format(_date)
                     : 'Select expiry date',
                 _selectExpiryDate,
               ),
@@ -89,38 +95,38 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
           style: ElevatedButton.styleFrom(
             primary: Colors.green,
           ),
-          onPressed: _addShopping,
-          child: Text('Add'),
+          onPressed: _update,
+          child: Text('Update'),
         ),
       ],
     );
   }
 
   Widget _buildMemberDropdown(List<String>? members) {
-    String _assignToUsername = members?.isNotEmpty == true ? members![0] : '';
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: members == null || members.isEmpty
-          ? CircularProgressIndicator()
-          : DropdownButtonFormField<String>(
-              value: _assignToUsername,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _assignToUsername = newValue!;
-                });
-              },
-              items: members.map((val) {
-                return DropdownMenuItem(
-                  value: val,
-                  child: Text(val),
-                );
-              }).toList(),
-              decoration: InputDecoration(
-                labelText: 'Member',
-              ),
-            ),
-    );
+    if (members == null || members.isEmpty) {
+      return CircularProgressIndicator();
+    } else {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: DropdownButtonFormField<String>(
+          value: _username,
+          onChanged: (String? newValue) {
+            setState(() {
+              _username = newValue!;
+            });
+          },
+          items: members.map((val) {
+            return DropdownMenuItem(
+              value: val,
+              child: Text(val),
+            );
+          }).toList(),
+          decoration: InputDecoration(
+            labelText: 'Member',
+          ),
+        ),
+      );
+    }
   }
 
   Widget _buildTextField(
@@ -167,12 +173,14 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
     );
   }
 
-  void _addShopping() {
-    widget.bloc.add(ShoppingCreateEvent(
-        date: _expiryDate.toString(),
-        assignToUsername: _assignToUsername,
-        name: _name,
-        note: _note));
+  void _update() {
+    widget.bloc.add(ShoppingUpdateEvent(
+      assignToUsername: _username,
+      date: _date.toString(),
+      listId: _listId,
+      note: _note,
+      name: _name,
+    ));
     widget.bloc.add(ShoppingLoadedEvent());
     Navigator.pop(context);
   }
@@ -187,9 +195,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       lastDate: DateTime(currentDate.year + 10),
     );
 
-    if (pickedDate != null && pickedDate != _expiryDate) {
+    if (pickedDate != null && pickedDate != _date) {
       setState(() {
-        _expiryDate = pickedDate;
+        _date = pickedDate;
       });
     }
   }

@@ -36,27 +36,25 @@ class ShoppingAPIProvider {
     }
   }
 
-  Future<dynamic> createShopping(
-      String name, String assignToUsername, String note, String date) async {
-    print(1);
+  Future<dynamic> createTask(int listId, String foodName, int quantity) async {
+    print({"foodName": foodName, "quantity": quantity});
     final response = await api.post(
-      "/shopping",
+      "/shopping/task",
       data: {
-        'name': name,
-        'assignToUsername': assignToUsername,
-        'note': note,
-        'date': date,
+        "listId": listId,
+        "tasks": [
+          {"foodName": foodName, "quantity": quantity}
+        ]
       },
     );
     NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
     return;
   }
 
-  Future<dynamic> createTask(
+  Future<dynamic> createShopping(
       String name, String assignToUsername, String note, String date) async {
     final response = await api.post(
-      "    print(1);
-",
+      "/shopping",
       data: {
         'name': name,
         'assignToUsername': assignToUsername,
@@ -92,6 +90,55 @@ class ShoppingAPIProvider {
       "/shopping",
       data: {
         'listId': id,
+      },
+    );
+    NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
+    return;
+  }
+
+  Future<void> deleteTask(int id) async {
+    final response = await api.delete(
+      "/shopping/task",
+      data: {
+        'taskId': id,
+      },
+    );
+    NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
+    return;
+  }
+
+  Future<void> updateTask(
+      int taskId, String newFoodName, int newQuantity) async {
+    var data;
+    if (newFoodName == '')
+      data = {
+        'taskId': taskId,
+        'newQuantity': newQuantity,
+      };
+    else
+      data = {
+        'taskId': taskId,
+        'newFoodName': newFoodName,
+        'newQuantity': newQuantity,
+      };
+    final response = await api.put(
+      "/shopping/task",
+      data: data,
+    );
+    NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
+    return;
+  }
+
+  Future<void> updateTaskState(int taskId, int newDone) async {
+    print({
+      'taskId': taskId,
+      'newDone': newDone,
+    });
+    final response = await api.put(
+      "/shopping/task",
+      data: {
+        'taskId': taskId,
+        'newDone': newDone,
       },
     );
     NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");
