@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:shop_app/screens/group/logic/models/member.dart';
-import 'package:shop_app/screens/shoppinglist/logic/bloc/bloc.dart';
+import 'package:shop_app/screens/food/logic/models/member.dart';
+import 'package:shop_app/screens/meal_plan/logic/bloc/bloc.dart';
 
-class AddShoppingDialog extends StatefulWidget {
-  final ShoppingBloc bloc;
+class AddMealPlanDialog extends StatefulWidget {
+  final MealPlanBloc bloc;
+  final String date;
 
-  AddShoppingDialog({
+  AddMealPlanDialog({
     Key? key,
     required this.bloc,
+    required this.date,
   }) : super(key: key);
 
   @override
-  _AddShoppingDialogState createState() => _AddShoppingDialogState();
+  _AddMealPlanDialogState createState() => _AddMealPlanDialogState();
 }
 
-class _AddShoppingDialogState extends State<AddShoppingDialog> {
-  String _name = '';
-  String _note = '';
-  String _assignToUsername = '';
+class _AddMealPlanDialogState extends State<AddMealPlanDialog> {
+  String _name = 'breakfast';
+  String _foodName = '';
   DateTime _expiryDate = DateTime.now();
-  List<Member>? members;
+  List<Food>? foods;
 
   @override
   void initState() {
     super.initState();
-    widget.bloc.add(DataMemberLoadedEvent());
+    widget.bloc.add(DataFoodLoadedEvent());
+    foods = [];
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Add Shopping',
+        'Add MealPlan',
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       content: Container(
@@ -45,35 +47,31 @@ class _AddShoppingDialogState extends State<AddShoppingDialog> {
               BlocListener(
                 listenWhen: (prev, curr) => prev != curr,
                 listener: (context, state) {
-                  if (state is MemberLoadedSuccessState) {
-                    print(state.members.members);
+                  if (state is FoodLoadedSuccessState) {
                     setState(() {
-                      members = state.members.members;
-                      _assignToUsername = state.members.members[0].username;
+                      foods = state.foods.foods;
+                      _foodName = foods?[0].name as String;
                     });
                   }
                 },
                 bloc: widget.bloc,
                 child: Container(),
               ),
-              _buildMemberDropdown(
-                members?.map((f) => f.username.toString()).toList(),
+              _buildFoodDropdown(
+                foods?.map((f) => f.name.toString()).toList(),
               ),
               SizedBox(height: 12),
-              _buildTextField('Name', 'Enter shopping name',
-                  (value) => _name = value, _name.toString()),
+              _buildNameDropdown(),
               SizedBox(height: 12),
               _buildDateTimeField(
                 'Expiry Date',
                 'Select expiry date',
                 (value) => {},
                 _expiryDate != null
-                    ? DateFormat('dd/MM/yyyy').format(_expiryDate)
+                    ? DateFormat('MM/dd/yyyy').format(_expiryDate)
                     : 'Select expiry date',
                 _selectExpiryDate,
               ),
-              _buildTextField('Note', 'Enter member note',
-                  (value) => _note = value, _note.toString()),
             ],
           ),
         ),
@@ -81,7 +79,7 @@ class _AddShoppingDialogState extends State<AddShoppingDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            widget.bloc.add(ShoppingLoadedEvent());
+            widget.bloc.add(MealPlanLoadedEvent(date: widget.date));
             Navigator.pop(context);
           },
           child: Text('Cancel'),
@@ -90,51 +88,57 @@ class _AddShoppingDialogState extends State<AddShoppingDialog> {
           style: ElevatedButton.styleFrom(
             primary: Colors.green,
           ),
-          onPressed: _addShopping,
+          onPressed: _addMealPlan,
           child: Text('Add'),
         ),
       ],
     );
   }
 
-  Widget _buildMemberDropdown(List<String>? members) {
+  Widget _buildFoodDropdown(List<String>? foods) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: members == null || members.isEmpty
+      child: foods == null || foods.isEmpty
           ? CircularProgressIndicator()
           : DropdownButtonFormField<String>(
-              value: _assignToUsername,
+              value: _foodName,
               onChanged: (String? newValue) {
                 setState(() {
-                  _assignToUsername = newValue!;
+                  _foodName = newValue!;
                 });
               },
-              items: members.map((val) {
+              items: foods.map((val) {
                 return DropdownMenuItem(
                   value: val,
                   child: Text(val),
                 );
               }).toList(),
               decoration: InputDecoration(
-                labelText: 'Member',
+                labelText: 'Food',
               ),
             ),
     );
   }
 
-  Widget _buildTextField(
-      String label, String hint, Function(String) onChanged, String value) {
+  Widget _buildNameDropdown() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
+      child: DropdownButtonFormField<String>(
+        value: _name,
+        onChanged: (String? newValue) {
+          setState(() {
+            _name = newValue!;
+          });
+        },
+        items: ['breakfast', 'lunch', 'dinner'].map((val) {
+          return DropdownMenuItem(
+            value: val,
+            child: Text(val),
+          );
+        }).toList(),
         decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
+          labelText: 'Name',
         ),
-        onChanged: onChanged,
-        autofocus: label == 'Name', // Autofocus on the name field
-        keyboardType: label == 'Quantity' ? TextInputType.number : null,
-        controller: TextEditingController(text: value),
       ),
     );
   }
@@ -166,15 +170,14 @@ class _AddShoppingDialogState extends State<AddShoppingDialog> {
     );
   }
 
-  void _addShopping() {
-    print(_name);
-    print(_assignToUsername);
-    widget.bloc.add(ShoppingCreateEvent(
-        date: _expiryDate.toString(),
-        assignToUsername: _assignToUsername,
-        name: _name,
-        note: _note));
-    widget.bloc.add(ShoppingLoadedEvent());
+  void _addMealPlan() {
+    widget.bloc.add(MealPlanCreateEvent(
+      foodName: _foodName,
+      name: _name,
+      timestamp: DateFormat('MM/dd/yyyy').format(_expiryDate),
+      date: widget.date,
+    ));
+    widget.bloc.add(MealPlanLoadedEvent(date: widget.date));
     Navigator.pop(context);
   }
 

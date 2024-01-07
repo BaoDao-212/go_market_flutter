@@ -57,7 +57,9 @@ class DatabaseFridge {
   }
 
   static Future<List<Fridge>> getFridges() async {
+    print(1);
     final Database db = await openDatabaseFridge();
+    print(1);
     final List<Map<String, dynamic>> maps = await db.query(tableName);
     print(maps);
     return List.generate(maps.length, (i) {

@@ -12,6 +12,7 @@ class ShoppingAPIProvider {
   }
 
   Future<dynamic> getShoppinglist() async {
+    print(await isConnectedToNetwork());
     if (await isConnectedToNetwork()) {
       final response = await api.get("/shopping/task");
       List<Shopping> shoppings = [];
@@ -20,17 +21,22 @@ class ShoppingAPIProvider {
         shoppings.add(shopping);
       });
       final f = ShoppingModel(shopping: shoppings);
-      await DatabaseShopping.deleteAllShoppings();
       await DatabaseShopping.getShoppings().then((localShoppings) async {
+        print(localShoppings);
+        // DatabaseShopping.deleteAllShoppings();
         if (localShoppings.isEmpty) {
           for (final shopping in localShoppings) {
             await DatabaseShopping.insertShopping(shopping);
           }
         }
       });
+      final localShoppings = await DatabaseShopping.getShoppings();
+      print(localShoppings.length);
       return f;
     } else {
+      print(123);
       final localShoppings = await DatabaseShopping.getShoppings();
+      print(localShoppings);
       final f = ShoppingModel(shopping: localShoppings);
       return f;
     }

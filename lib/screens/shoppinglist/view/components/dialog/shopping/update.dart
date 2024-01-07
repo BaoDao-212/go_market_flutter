@@ -35,6 +35,7 @@ class _UpdateShoppingDialogState extends State<UpdateShoppingDialog> {
     _note = widget.shoppingItem.note;
     _username = widget.shoppingItem.username;
     _date = widget.shoppingItem.date;
+    print(_name);
   }
 
   @override
@@ -67,11 +68,11 @@ class _UpdateShoppingDialogState extends State<UpdateShoppingDialog> {
                   members?.map((f) => f.username.toString()).toList()),
               SizedBox(height: 12),
               _buildTextField('Name', 'Enter shoppping name',
-                  (value) => _username = value, _username.toString()),
+                  (value) => _name = value, _name.toString()),
               _buildDateTimeField(
                 'Expiry Date',
                 'Select expiry date',
-                (value) => {}, // Không cần sử dụng onChanged
+                (value) => {},
                 _date != null
                     ? DateFormat('dd/MM/yyyy').format(_date)
                     : 'Select expiry date',

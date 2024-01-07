@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
-import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/home/view/home_screen.dart';
 import 'package:shop_app/screens/shared/view/widgets/main_text_field.dart';
 import 'package:shop_app/screens/shared/view/widgets/icon_text_button.dart';
 import '../../../../../size_config.dart';

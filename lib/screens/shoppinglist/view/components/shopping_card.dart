@@ -96,6 +96,13 @@ class _ShoppingCardState extends State<ShoppingCard> {
                       ],
                     ),
                     Text(
+                      'Member: ${widget.username}',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
                       'Note: ${widget.note}',
                       style: TextStyle(
                         color: Colors.grey,

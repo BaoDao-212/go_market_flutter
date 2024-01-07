@@ -4,7 +4,7 @@ import 'package:shop_app/core/app_export.dart';
 import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/fridge/view/screen/fridge_screen.dart';
 import 'package:shop_app/screens/group/view/screen/create_group_screen.dart';
-import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/home/view/home_screen.dart';
 import 'package:shop_app/screens/profile/view/components/profile_screen.dart';
 import 'package:shop_app/screens/group/view/screen/group.screen.dart';
 

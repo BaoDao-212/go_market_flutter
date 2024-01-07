@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1010367781421",
+    "project_id": "gomarket-cb08e",
+    "storage_bucket": "gomarket-cb08e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010367781421:android:a63dbb717d64b31e2db6a4",
+        "android_client_info": {
+          "package_name": "com.example.go_market"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAeSIQD_yjPR-B5EOyqZQTIKMq52SKAFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

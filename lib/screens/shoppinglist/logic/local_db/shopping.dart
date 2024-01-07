@@ -57,8 +57,9 @@ class DatabaseShopping {
   static Future<List<Shopping>> getShoppings() async {
     print(0);
     final Database db = await openDatabaseShopping();
-    final List<Map<String, dynamic>> maps = await db.query(tableName);
-    // print(maps);
+    print(db);
+    final List<Map<String, dynamic>> maps = await db.query("shoppings");
+    print(maps);
     return List.generate(maps.length, (i) {
       return Shopping(
         id: maps[i]['id'],

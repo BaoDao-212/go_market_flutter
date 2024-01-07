@@ -8,7 +8,8 @@ import 'package:shop_app/screens/food/view/screen/foods_screen.dart';
 import 'package:shop_app/screens/fridge/view/screen/fridge_screen.dart';
 import 'package:shop_app/screens/group/view/screen/create_group_screen.dart';
 import 'package:shop_app/screens/group/view/screen/group.screen.dart';
-import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/home/view/home_screen.dart';
+import 'package:shop_app/screens/meal_plan/view/screen/shopping_screen.dart';
 import 'package:shop_app/screens/otp/otp_screen.dart';
 import 'package:shop_app/screens/profile/view/components/profile_screen.dart';
 import 'package:shop_app/screens/profile/view/my_account/my_account.dart';
@@ -34,6 +35,8 @@ class AppRouter {
         return CreateGroupPage.route();
       case GroupScreen.routeName:
         return GroupScreen.route();
+      case MealPlanScreen.routeName:
+        return MealPlanScreen.route();
       case FoodScreen.routeName:
         return FoodScreen.route();
       case FridgeScreen.routeName:

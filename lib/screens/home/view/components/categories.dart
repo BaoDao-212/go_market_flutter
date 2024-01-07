@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop_app/screens/food/view/screen/foods_screen.dart';
 
-import '../../../size_config.dart';
+import '../../../../size_config.dart';
 
 class Categories extends StatelessWidget {
   @override

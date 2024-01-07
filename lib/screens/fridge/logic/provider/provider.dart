@@ -12,6 +12,7 @@ class FridgeAPIProvider {
   }
 
   Future<FridgeModel> getFridgelist() async {
+    print(await isConnectedToNetwork());
     if (await isConnectedToNetwork()) {
       final response = await api.get("/fridge");
       List<Fridge> fridges = [];
@@ -32,6 +33,7 @@ class FridgeAPIProvider {
       return f;
     } else {
       final localFridges = await DatabaseFridge.getFridges();
+      print(1);
       final f = FridgeModel(fridge: localFridges);
       return f;
     }

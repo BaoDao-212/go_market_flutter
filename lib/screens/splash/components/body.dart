@@ -7,7 +7,7 @@ import 'package:shop_app/screens/auth/logic/cubit/auth_cubit.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/auth/logic/repository/auth_repository.dart';
 import 'package:shop_app/screens/auth/view/sign_in/sign_in_screen.dart';
-import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/home/view/home_screen.dart';
 import 'package:shop_app/size_config.dart';
 
 import '../components/splash_content.dart';
