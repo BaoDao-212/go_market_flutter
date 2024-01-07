@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/components/product_card.dart';
 import 'package:shop_app/models/Product.dart';
-import 'package:shop_app/screens/meal_plan/view/screen/shopping_screen.dart';
+import 'package:shop_app/screens/recipe/view/screen/shopping_screen.dart';
 
 import '../../../../size_config.dart';
 import 'section_title.dart';
@@ -17,7 +17,7 @@ class PopularProducts extends StatelessWidget {
           child: SectionTitle(
               title: "Popular Products",
               press: () {
-                Navigator.pushNamed(context, MealPlanScreen.routeName);
+                Navigator.pushNamed(context, RecipeScreen.routeName);
               }),
         ),
         SizedBox(height: getProportionateScreenWidth(20)),
@@ -31,8 +31,7 @@ class PopularProducts extends StatelessWidget {
                   if (demoProducts[index].isPopular)
                     return ProductCard(product: demoProducts[index]);
 
-                  return SizedBox
-                      .shrink();
+                  return SizedBox.shrink();
                 },
               ),
               SizedBox(width: getProportionateScreenWidth(20)),

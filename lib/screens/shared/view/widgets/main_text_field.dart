@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shop_app/components/form_error.dart';
-import 'package:shop_app/screens/shared/logic/http/api.dart';
 import 'package:shop_app/size_config.dart';
 
 class MainTextField extends StatefulWidget {
@@ -15,6 +13,7 @@ class MainTextField extends StatefulWidget {
   final bool emailField;
   final bool messageField;
   final bool usernameField;
+  final bool defaultField;
   final bool readOnly;
   final Color? textColor;
 
@@ -29,6 +28,7 @@ class MainTextField extends StatefulWidget {
     this.messageField = false,
     this.usernameField = false,
     this.readOnly = false,
+    this.defaultField = false,
     this.textColor,
     required this.label,
     required this.hintText,
@@ -43,7 +43,9 @@ class _MainTextFieldState extends State<MainTextField> {
   String error = '';
 
   IconData getPrefixIcon() {
-    if (widget.passwordField) {
+    if (widget.defaultField) {
+      return Icons.app_registration;
+    } else if (widget.passwordField) {
       return Icons.lock;
     } else if (widget.emailField) {
       return Icons.email;
@@ -108,7 +110,7 @@ class _MainTextFieldState extends State<MainTextField> {
               borderSide: BorderSide(color: Colors.transparent),
               borderRadius: BorderRadius.circular(30),
             ),
-            contentPadding: EdgeInsets.all(16),
+            contentPadding: EdgeInsets.all(20),
             hintStyle: TextStyle(color: widget.textColor),
           ),
           keyboardType: widget.emailField

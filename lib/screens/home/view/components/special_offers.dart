@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/meal_plan/view/screen/shopping_screen.dart';
 
 import '../../../../size_config.dart';
 import 'section_title.dart';
@@ -17,7 +18,9 @@ class SpecialOffers extends StatelessWidget {
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: SectionTitle(
             title: "Special for you",
-            press: () {},
+            press: () {
+              Navigator.pushNamed(context, MealPlanScreen.routeName);
+            },
           ),
         ),
         SizedBox(height: getProportionateScreenWidth(20)),
