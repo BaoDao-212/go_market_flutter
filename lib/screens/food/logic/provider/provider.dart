@@ -17,6 +17,7 @@ class FoodAPIProvider {
     if (await isConnectedToNetwork()) {
       final response = await api.get("/food");
       List<Food> foods = [];
+      print(response.data);
       (response.data['foods'] as List<dynamic>).forEach((m) {
         final Food food = Food.fromJson(m);
         foods.add(food);

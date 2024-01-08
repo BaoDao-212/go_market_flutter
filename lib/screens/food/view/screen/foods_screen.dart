@@ -45,7 +45,7 @@ class FoodScreen extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('My Food'),
+              title: Text('Food'),
             ),
             body: BlocBuilder<FoodBloc, FoodState>(
               builder: (context, state) {

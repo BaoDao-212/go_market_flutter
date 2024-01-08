@@ -35,7 +35,7 @@ class _UpdateTaskDialogState extends State<UpdateTaskDialog> {
     print(widget.task);
     return AlertDialog(
       title: Text(
-        'Update Shopping',
+        'Update Task',
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       content: Container(
@@ -110,7 +110,10 @@ class _UpdateTaskDialogState extends State<UpdateTaskDialog> {
         items: foods?.map((val) {
           return DropdownMenuItem(
             value: val,
-            child: Text(val),
+            child: SizedBox(
+              width: 100.0,
+              child: Text(val),
+            ),
           );
         }).toList(),
         decoration: InputDecoration(

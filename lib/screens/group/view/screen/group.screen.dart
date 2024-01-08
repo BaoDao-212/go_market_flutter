@@ -7,6 +7,7 @@ import 'package:shop_app/screens/group/logic/bloc/bloc.dart';
 import 'package:shop_app/screens/group/view/components/dialog/add_member.dart';
 import 'package:shop_app/screens/group/view/components/dialog/delete_member.dart';
 import 'package:shop_app/screens/group/view/components/member.dart';
+import 'package:shop_app/screens/home/view/home_screen.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 
 class GroupScreen extends StatelessWidget {
@@ -44,7 +45,13 @@ class GroupScreen extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('My Group'),
+              title: Text('Group'),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pushNamed(context, HomeScreen.routeName);
+                },
+              ),
             ),
             body: BlocBuilder<GroupBloc, GroupState>(
               builder: (context, state) {

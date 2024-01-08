@@ -136,15 +136,10 @@ class ShoppingAPIProvider {
   }
 
   Future<void> updateTaskState(int taskId, int newDone) async {
-    print({
-      'taskId': taskId,
-      'newDone': newDone,
-    });
     final response = await api.put(
-      "/shopping/task",
+      "/shopping/task/mark",
       data: {
         'taskId': taskId,
-        'newDone': newDone,
       },
     );
     NotificationHelper.show(response.data['resultMessage']['en'], "SUCCESS");

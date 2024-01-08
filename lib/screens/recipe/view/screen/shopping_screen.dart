@@ -253,6 +253,9 @@ class _RecipeScreenState extends State<RecipeScreen> {
   _addRecipeDialog(BuildContext context) {
     final bloc = context.read<RecipeBloc>();
     print(htmlContentController.text);
+    print(foodNameController.text);
+    print(nameController.text);
+    print(descriptionController.text);
     bloc.add(RecipeCreateEvent(
         foodName: foodNameController.text,
         name: nameController.text,

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:shop_app/firebase.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/auth/logic/repository/auth_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -17,6 +18,11 @@ class AuthCubit extends Cubit<User?> {
         () => authRepository.authenticate(email, password, context));
   }
 
+  Future<void> saveToken() async {
+    final fcmToken = await FirebaseService.getFCMToken();
+    authRepository.saveToken(fcmToken as String);
+  }
+
   Future<dynamic> register(String name, String email, String password) async {
     return await authRepository.register(
       name,
@@ -27,7 +33,6 @@ class AuthCubit extends Cubit<User?> {
 
   Future<void> _loginWith(Function method) async {
     final (_, user) = await method();
-    print(user);
     emit(user);
   }
 

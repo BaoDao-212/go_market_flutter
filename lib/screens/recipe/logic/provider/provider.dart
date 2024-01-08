@@ -42,8 +42,14 @@ class RecipeAPIProvider {
     }
   }
 
-  Future<dynamic> createRecipe(String foodName, String description,
-      String htmlContent, String name) async {
+  Future<dynamic> createRecipe(String name, String foodName, String htmlContent,
+      String description) async {
+    print({
+      'name': name,
+      'description': description,
+      'htmlContent': htmlContent,
+      'foodName': foodName,
+    });
     final response = await api.post(
       "/recipe",
       data: {

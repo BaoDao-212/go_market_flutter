@@ -10,6 +10,7 @@ import 'package:shop_app/screens/group/view/screen/create_group_screen.dart';
 import 'package:shop_app/screens/group/view/screen/group.screen.dart';
 import 'package:shop_app/screens/home/view/home_screen.dart';
 import 'package:shop_app/screens/meal_plan/view/screen/shopping_screen.dart';
+import 'package:shop_app/screens/notification/view/screen/index.dart';
 import 'package:shop_app/screens/otp/otp_screen.dart';
 import 'package:shop_app/screens/profile/view/components/profile_screen.dart';
 import 'package:shop_app/screens/profile/view/my_account/my_account.dart';
@@ -34,6 +35,8 @@ class AppRouter {
         return SignUpScreen.route();
       case CreateGroupPage.routeName:
         return CreateGroupPage.route();
+      case NotificationScreen.routeName:
+        return NotificationScreen.route();
       case RecipeScreen.routeName:
         return RecipeScreen.route();
       case GroupScreen.routeName:

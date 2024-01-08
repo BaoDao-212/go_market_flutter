@@ -112,7 +112,10 @@ class _AddFridgeDialogState extends State<AddFridgeDialog> {
         items: foods.map((val) {
           return DropdownMenuItem(
             value: val,
-            child: Text(val),
+            child: SizedBox(
+              width: 100.0,
+              child: Text(val),
+            ),
           );
         }).toList(),
         decoration: InputDecoration(

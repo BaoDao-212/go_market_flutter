@@ -38,14 +38,14 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
   final TextEditingController _expiryDateController = TextEditingController(
       text: DateFormat('MM/dd/yyyy').format(DateTime.now()));
   DateTime _expiryDate = DateTime.now();
-  String selectedCategory = 'breakfast';
+  String selectedCategory = 'Breakfast';
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Meal Plan'),
+        title: Text('Meal Plan'),
       ),
       body: BlocBuilder<MealPlanBloc, MealPlanState>(
         builder: (context, state) {
@@ -100,17 +100,17 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
               SizedBox(height: 12),
               ToggleButtons(
                 isSelected: [
-                  selectedCategory == 'breakfast',
-                  selectedCategory == 'lunch',
-                  selectedCategory == 'dinner',
+                  selectedCategory == 'Breakfast',
+                  selectedCategory == 'Lunch',
+                  selectedCategory == 'Dinner',
                 ],
                 onPressed: (int index) {
                   setState(() {
                     selectedCategory = index == 0
-                        ? 'breakfast'
+                        ? 'Breakfast'
                         : index == 1
-                            ? 'lunch'
-                            : 'dinner';
+                            ? 'Lunch'
+                            : 'Dinner';
                   });
                 },
                 borderRadius: BorderRadius.circular(16.0),
@@ -164,18 +164,18 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
                           List<MealPlan> lunch = [];
                           List<MealPlan> dinner = [];
                           state.mealPlan.mealPlan.forEach((e) => {
-                                if (e.name == 'breakfast')
+                                if (e.name == 'Breakfast')
                                   breakfast.add(e)
-                                else if (e.name == 'lunch')
+                                else if (e.name == 'Lunch')
                                   lunch.add(e)
-                                else if (e.name == 'dinner')
+                                else if (e.name == 'Dinner')
                                   dinner.add(e)
                               });
-                          if (selectedCategory == 'breakfast') {
+                          if (selectedCategory == 'Breakfast') {
                             displayedList = breakfast;
-                          } else if (selectedCategory == 'lunch') {
+                          } else if (selectedCategory == 'Lunch') {
                             displayedList = lunch;
-                          } else if (selectedCategory == 'dinner') {
+                          } else if (selectedCategory == 'Dinner') {
                             displayedList = dinner;
                           }
 

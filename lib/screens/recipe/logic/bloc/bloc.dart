@@ -5,7 +5,6 @@ import 'package:shop_app/screens/food/logic/repository/reposotory.dart';
 import 'package:shop_app/screens/group/logic/repository/reposotory.dart';
 import 'package:shop_app/screens/recipe/logic/models/models.dart';
 import 'package:shop_app/screens/recipe/logic/repository/reposotory.dart';
-import '/core/app_export.dart';
 part 'event.dart';
 part 'state.dart';
 
@@ -49,7 +48,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     emit.call(RecipeLoadInProgressState());
     try {
       final recipe = await repository.createRecipe(
-          event.foodName, event.name, event.htmlContent, event.description);
+          event.name, event.foodName, event.htmlContent, event.description);
       final foods = await repositoryFood.getFoodList();
       emit.call(RecipeLoadSuccessState(recipe: recipe, food: foods));
     } catch (e) {

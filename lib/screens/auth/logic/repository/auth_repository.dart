@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:shop_app/firebase.dart';
 import 'package:shop_app/screens/auth/logic/models/token.dart';
 import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/auth/logic/provider/auth_api_provider.dart';
@@ -48,6 +49,7 @@ class AuthRepository {
   Future<(Future<dynamic>, dynamic)> authenticate(
       String email, String password, BuildContext context) async {
     final (tokens, user) = await _provider.authenticate(email, password);
+
     return (setTokens(tokens), user);
   }
 
@@ -75,8 +77,8 @@ class AuthRepository {
     return setTokens(await _provider.logoutFromAllDevices());
   }
 
-  Future<void> recover(String email) {
-    return _provider.recover(email);
+  Future<void> saveToken(String token) {
+    return _provider.saveNotificationToken(token);
   }
 
   Future<String?> getAccessToken() {

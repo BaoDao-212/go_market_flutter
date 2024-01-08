@@ -19,8 +19,8 @@ class AddMealPlanDialog extends StatefulWidget {
 }
 
 class _AddMealPlanDialogState extends State<AddMealPlanDialog> {
-  String _name = 'breakfast';
-  String _foodName = '';
+  String _name = 'Breakfast';
+  late String _foodName;
   DateTime _expiryDate = DateTime.now();
   List<Food>? foods;
 
@@ -50,16 +50,23 @@ class _AddMealPlanDialogState extends State<AddMealPlanDialog> {
                   if (state is FoodLoadedSuccessState) {
                     setState(() {
                       foods = state.foods.foods;
-                      _foodName = foods?[0].name as String;
+                      print(foods![0].name);
+                      _foodName = state.foods.foods[0].name.toString();
                     });
                   }
                 },
                 bloc: widget.bloc,
                 child: Container(),
               ),
-              _buildFoodDropdown(
-                foods?.map((f) => f.name.toString()).toList(),
-              ),
+              if (foods != null && foods!.length > 0)
+                _buildFoodDropdown(
+                  foods?.map((f) => f.name.toString()).toList(),
+                ),
+              // else
+              //   Text(
+              //     "Please add food before adding meal plan",
+              //     style: TextStyle(color: Colors.redAccent),
+              //   ),
               SizedBox(height: 12),
               _buildNameDropdown(),
               SizedBox(height: 12),
@@ -98,25 +105,31 @@ class _AddMealPlanDialogState extends State<AddMealPlanDialog> {
   Widget _buildFoodDropdown(List<String>? foods) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: foods == null || foods.isEmpty
-          ? CircularProgressIndicator()
-          : DropdownButtonFormField<String>(
-              value: _foodName,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _foodName = newValue!;
-                });
-              },
-              items: foods.map((val) {
-                return DropdownMenuItem(
-                  value: val,
-                  child: Text(val),
-                );
-              }).toList(),
-              decoration: InputDecoration(
-                labelText: 'Food',
+      child: Container(
+        width: 300.0, // Set the width as per your requirement
+        child: foods == null || foods.isEmpty
+            ? CircularProgressIndicator()
+            : DropdownButtonFormField<String>(
+                value: _foodName,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _foodName = newValue!;
+                  });
+                },
+                items: foods.map((val) {
+                  return DropdownMenuItem(
+                    value: val,
+                    child: SizedBox(
+                      width: 100.0,
+                      child: Text(val),
+                    ),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Food',
+                ),
               ),
-            ),
+      ),
     );
   }
 
@@ -130,7 +143,7 @@ class _AddMealPlanDialogState extends State<AddMealPlanDialog> {
             _name = newValue!;
           });
         },
-        items: ['breakfast', 'lunch', 'dinner'].map((val) {
+        items: ['Breakfast', 'Lunch', 'Dinner'].map((val) {
           return DropdownMenuItem(
             value: val,
             child: Text(val),

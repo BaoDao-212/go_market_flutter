@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shop_app/screens/food/logic/models/member.dart';
 import 'package:shop_app/screens/food/view/screen/foods_screen.dart';
+import 'package:shop_app/screens/meal_plan/view/screen/shopping_screen.dart';
+import 'package:shop_app/screens/recipe/view/screen/shopping_screen.dart';
+import 'package:shop_app/screens/shoppinglist/view/screen/shopping_screen.dart';
 
 import '../../../../size_config.dart';
 
@@ -8,11 +12,26 @@ class Categories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> categories = [
-      {"icon": "assets/icons/Flash Icon.svg", "text": "Flash Deal"},
-      {"icon": "assets/icons/Bill Icon.svg", "text": "Bill"},
-      {"icon": "assets/icons/Game Icon.svg", "text": "Game"},
-      {"icon": "assets/icons/Gift Icon.svg", "text": "Daily Gift"},
-      {"icon": "assets/icons/Discover.svg", "text": "More"},
+      {
+        "icon": "assets/icons/Flash Icon.svg",
+        "text": "Meal plan",
+        "route": MealPlanScreen.routeName
+      },
+      {
+        "icon": "assets/icons/Bill Icon.svg",
+        "text": "Recipe",
+        "route": RecipeScreen.routeName
+      },
+      {
+        "icon": "assets/icons/Game Icon.svg",
+        "text": "Shopping",
+        "route": ShoppingScreen.routeName
+      },
+      {
+        "icon": "assets/icons/Gift Icon.svg",
+        "text": "Food",
+        "route": FoodScreen.routeName
+      },
     ];
     return Padding(
       padding: EdgeInsets.all(getProportionateScreenWidth(20)),
@@ -25,7 +44,7 @@ class Categories extends StatelessWidget {
             icon: categories[index]["icon"],
             text: categories[index]["text"],
             press: () {
-              Navigator.pushNamed(context, FoodScreen.routeName);
+              Navigator.pushNamed(context, categories[index]["route"]);
             },
           ),
         ),
@@ -50,13 +69,13 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: press,
       child: SizedBox(
-        width: getProportionateScreenWidth(55),
+        width: getProportionateScreenWidth(65),
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(getProportionateScreenWidth(15)),
-              height: getProportionateScreenWidth(55),
-              width: getProportionateScreenWidth(55),
+              height: getProportionateScreenWidth(65),
+              width: getProportionateScreenWidth(65),
               decoration: BoxDecoration(
                 color: Color(0xFFFFECDF),
                 borderRadius: BorderRadius.circular(10),

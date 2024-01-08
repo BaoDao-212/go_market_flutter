@@ -36,7 +36,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        'Add Shopping',
+        'Add Task',
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       content: Container(
@@ -111,7 +111,10 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         items: foods?.map((val) {
           return DropdownMenuItem(
             value: val,
-            child: Text(val),
+            child: SizedBox(
+              width: 100.0,
+              child: Text(val),
+            ),
           );
         }).toList(),
         decoration: InputDecoration(

@@ -95,6 +95,7 @@ class _SignFormState extends State<SignForm> {
     });
     try {
       await method();
+      context.read<AuthCubit>().saveToken();
       Navigator.of(context).pushNamedAndRemoveUntil(
         HomeScreen.routeName,
         (route) => false,

@@ -11,9 +11,9 @@ class RecipeRepository {
     return apiResponse;
   }
 
-  Future<dynamic> createRecipe(String foodName, String name, String htmlContent,
+  Future<dynamic> createRecipe(String name, String foodName, String htmlContent,
       String description) async {
-    await _apiProvider.createRecipe(foodName, name, htmlContent, description);
+    await _apiProvider.createRecipe(name, foodName, htmlContent, description);
     final fridges = await _apiProvider.getRecipelist(1);
     return fridges;
   }

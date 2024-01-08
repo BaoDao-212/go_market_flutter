@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/home/view/components/special_offers.dart';
 
 import '../../../../size_config.dart';
 import 'categories.dart';
-import 'discount_banner.dart';
 import 'home_header.dart';
 import 'popular_product.dart';
-import 'special_offers.dart';
 
 class Body extends StatelessWidget {
+  final dynamic recipe;
+  final dynamic mealPlan;
+
+  const Body({
+    Key? key,
+    required this.recipe,
+    required this.mealPlan,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,12 +24,13 @@ class Body extends StatelessWidget {
           children: [
             SizedBox(height: getProportionateScreenHeight(20)),
             HomeHeader(),
-            SizedBox(height: getProportionateScreenWidth(10)),
-            DiscountBanner(),
             Categories(),
-            SpecialOffers(),
             SizedBox(height: getProportionateScreenWidth(30)),
-            PopularProducts(),
+            SpecialOffers(mealPlan: mealPlan),
+            SizedBox(height: getProportionateScreenWidth(30)),
+            PopularProducts(
+              recipe: recipe,
+            ),
             SizedBox(height: getProportionateScreenWidth(30)),
           ],
         ),

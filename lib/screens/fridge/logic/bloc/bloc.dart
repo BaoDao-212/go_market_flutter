@@ -5,7 +5,6 @@ import 'package:shop_app/screens/food/logic/models/models.dart';
 import 'package:shop_app/screens/food/logic/repository/reposotory.dart';
 import 'package:shop_app/screens/fridge/logic/models/models.dart';
 import 'package:shop_app/screens/fridge/logic/repository/reposotory.dart';
-import '/core/app_export.dart';
 part 'event.dart';
 part 'state.dart';
 

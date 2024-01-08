@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/screens/food/logic/models/models.dart';
 import 'package:shop_app/screens/food/logic/repository/reposotory.dart';
-import '/core/app_export.dart';
 part 'event.dart';
 part 'state.dart';
 

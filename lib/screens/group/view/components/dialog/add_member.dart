@@ -1,6 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/screens/group/logic/bloc/bloc.dart';
+import 'package:shop_app/screens/shared/view/widgets/dialog/notification_dialog.dart';
 
 class AddMemberDialog extends StatefulWidget {
   final GroupBloc bloc;
@@ -72,6 +74,11 @@ class _AddMemberDialogState extends State<AddMemberDialog> {
     }
 
     widget.bloc.add(GroupMemberAddEvent(username: username));
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   print("Handling a foreground message: ${message.data}");
+    //   NotificationHelper.show("${message.data}", "SUCCESS");
+    //   // _showNotification(message);
+    // });
     Navigator.pop(context);
   }
 }

@@ -4,6 +4,7 @@ import 'package:shop_app/screens/auth/logic/models/user.dart';
 import 'package:shop_app/screens/shared/logic/http/api.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:shop_app/screens/app.dart';
+import 'package:shop_app/screens/shared/view/widgets/dialog/notification_dialog.dart';
 
 class AuthAPIProvider {
   _notification(String notification, String type) {
@@ -67,6 +68,16 @@ class AuthAPIProvider {
       _notification(e.response?.data['resultMessage']['en'], "ERROR");
       rethrow;
     }
+  }
+
+  Future<void> saveNotificationToken(String token) async {
+    final response = await api.put(
+      "/user/token",
+      data: {
+        'token': token,
+      },
+    );
+    return;
   }
 
   Future<void> recover(String email) async {

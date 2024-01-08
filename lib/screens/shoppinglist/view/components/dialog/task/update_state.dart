@@ -32,7 +32,7 @@ class _UpdateStateTaskDialogState extends State<UpdateStateTaskDialog> {
     print(widget.task);
     return AlertDialog(
       title: Text(
-        'Update Shopping',
+        'Update Task State',
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       content: Container(

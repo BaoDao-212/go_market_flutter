@@ -64,5 +64,6 @@ class CreateGroupPage extends StatelessWidget {
 
   void _createGroup(BuildContext context) {
     BlocProvider.of<GroupBloc>(context).add(GroupCreateEvent(groupName: ''));
+    BlocProvider.of<AuthCubit>(context).updateProfile();
   }
 }

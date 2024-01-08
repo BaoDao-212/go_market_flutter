@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/components/product_card.dart';
-import 'package:shop_app/models/Product.dart';
+import 'package:shop_app/screens/home/view/components/recipe_card.dart';
 import 'package:shop_app/screens/recipe/view/screen/shopping_screen.dart';
 
 import '../../../../size_config.dart';
 import 'section_title.dart';
 
-class PopularProducts extends StatelessWidget {
+class PopularProducts extends StatefulWidget {
+  final dynamic recipe;
+
+  PopularProducts({Key? key, required this.recipe}) : super(key: key);
+
+  @override
+  _PopularProductsState createState() => _PopularProductsState();
+}
+
+class _PopularProductsState extends State<PopularProducts> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -15,27 +23,25 @@ class PopularProducts extends StatelessWidget {
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: SectionTitle(
-              title: "Popular Products",
-              press: () {
-                Navigator.pushNamed(context, RecipeScreen.routeName);
-              }),
+            title: "Recipe",
+            press: () {
+              Navigator.pushNamed(context, RecipeScreen.routeName);
+            },
+          ),
         ),
         SizedBox(height: getProportionateScreenWidth(20)),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: [
-              ...List.generate(
-                demoProducts.length,
-                (index) {
-                  if (demoProducts[index].isPopular)
-                    return ProductCard(product: demoProducts[index]);
-
-                  return SizedBox.shrink();
-                },
-              ),
-              SizedBox(width: getProportionateScreenWidth(20)),
-            ],
+            children: (widget.recipe as List<dynamic>).map((meal) {
+              return RecipeCard(
+                description: meal.description,
+                foodImage: meal.foodImage,
+                foodName: meal.foodName,
+                htmlContent: meal.htmlContent,
+                name: meal.name,
+              );
+            }).toList(),
           ),
         )
       ],

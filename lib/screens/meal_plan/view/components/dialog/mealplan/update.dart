@@ -21,7 +21,7 @@ class UpdateMealPlanDialog extends StatefulWidget {
 }
 
 class _UpdateMealPlanDialogState extends State<UpdateMealPlanDialog> {
-  String _name = 'breakfast';
+  String _name = 'Breakfast';
   String _foodName = '';
   DateTime _expiryDate = DateTime.now();
   List<Food>? foods;
@@ -114,7 +114,10 @@ class _UpdateMealPlanDialogState extends State<UpdateMealPlanDialog> {
               items: foods.map((val) {
                 return DropdownMenuItem(
                   value: val,
-                  child: Text(val),
+                  child: SizedBox(
+                    width: 100.0,
+                    child: Text(val),
+                  ),
                 );
               }).toList(),
               decoration: InputDecoration(
@@ -134,7 +137,7 @@ class _UpdateMealPlanDialogState extends State<UpdateMealPlanDialog> {
             _name = newValue!;
           });
         },
-        items: ['breakfast', 'lunch', 'dinner'].map((val) {
+        items: ['Breakfast', 'Lunch', 'Dinner'].map((val) {
           return DropdownMenuItem(
             value: val,
             child: Text(val),

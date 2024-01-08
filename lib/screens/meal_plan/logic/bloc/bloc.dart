@@ -5,7 +5,6 @@ import 'package:shop_app/screens/food/logic/repository/reposotory.dart';
 import 'package:shop_app/screens/group/logic/repository/reposotory.dart';
 import 'package:shop_app/screens/meal_plan/logic/models/models.dart';
 import 'package:shop_app/screens/meal_plan/logic/repository/reposotory.dart';
-import '/core/app_export.dart';
 part 'event.dart';
 part 'state.dart';
 
@@ -16,15 +15,10 @@ class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
 
   MealPlanBloc() : super(MealPlanLoadInProgressState()) {
     on<MealPlanLoadedEvent>(_onMealPlanLoad);
-    // on<DataMemberLoadedEvent>(_onMemberLoad);
     on<DataFoodLoadedEvent>(_onFoodLoad);
     on<MealPlanCreateEvent>(_onMealPlanCreate);
-    // on<TaskCreateEvent>(_onTaskCreate);
     on<MealPlanUpdateEvent>(_onMealPlanUpdate);
-    // on<TaskUpdateStateEvent>(_onTaskUpdateState);
     on<MealPlanRemoveEvent>(_onMealPlanRemove);
-    // on<TaskUpdateEvent>(_onTaskUpdate);
-    // on<TaskRemoveEvent>(_onTaskRemove);
   }
 
   FutureOr<void> _onMealPlanLoad(

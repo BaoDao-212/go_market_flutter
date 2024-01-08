@@ -81,7 +81,7 @@ class _RecipeCardState extends State<RecipeCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.foodName}",
+                    "${widget.name}",
                     style: TextStyle(
                       fontSize: getProportionateScreenWidth(18),
                       fontWeight: FontWeight.bold,
