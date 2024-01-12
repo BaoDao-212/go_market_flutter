@@ -72,7 +72,7 @@ class FridgeCard extends StatelessWidget {
                       Row(
                         children: [
                           IconButton(
-                            icon: Icon(Icons.update, color: Colors.green),
+                            icon: Icon(Icons.edit, color: Colors.green),
                             onPressed: onUpdate,
                           ),
                           IconButton(

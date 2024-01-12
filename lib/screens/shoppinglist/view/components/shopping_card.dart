@@ -84,7 +84,7 @@ class _ShoppingCardState extends State<ShoppingCard> {
                               onPressed: widget.onCreate,
                             ),
                             IconButton(
-                              icon: Icon(Icons.update, color: Colors.green),
+                              icon: Icon(Icons.edit, color: Colors.green),
                               onPressed: widget.onUpdate,
                             ),
                             IconButton(

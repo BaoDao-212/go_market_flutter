@@ -64,7 +64,7 @@ class FoodCard extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(
-                Icons.update,
+                Icons.edit,
                 color: Color.fromARGB(255, 0, 255, 94),
               ),
               onPressed: onUpdate,
